@@ -1,4 +1,7 @@
 <RCC>
-    <qresource prefix="QtNetworkClient">
+    <qresource prefix="/menu">
+        <file>resources/user_login.png</file>
+        <file>resources/user_register.png</file>
+        <file>resources/default_user_image.png</file>
     </qresource>
 </RCC>

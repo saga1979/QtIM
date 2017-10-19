@@ -67,6 +67,13 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="m_menuUser">
+    <property name="title">
+     <string>User</string>
+    </property>
+    <addaction name="m_acRegisterUser"/>
+   </widget>
+   <addaction name="m_menuUser"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -77,6 +84,11 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="m_acRegisterUser">
+   <property name="text">
+    <string>Register</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

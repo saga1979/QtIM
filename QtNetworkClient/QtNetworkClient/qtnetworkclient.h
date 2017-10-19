@@ -6,7 +6,8 @@
 #include <QTcpSocket>
 
 
-
+class UserRegister;
+class UserLogin;
 class QtNetworkClient : public QMainWindow
 {
 	Q_OBJECT
@@ -23,4 +24,6 @@ private slots:
 private:
 	Ui::QtNetworkClientClass ui;
 	QTcpSocket* m_socket;
+	UserRegister *m_userRegister;
+	UserLogin *m_userLogin;
 };
