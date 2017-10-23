@@ -20,6 +20,7 @@ private slots:
 	void OnConnected();
 	void OnSocketError(QAbstractSocket::SocketError);
 	void OnDataReadyRead();
+	void OnUserRegister();
 
 private:
 	Ui::QtNetworkClientClass ui;

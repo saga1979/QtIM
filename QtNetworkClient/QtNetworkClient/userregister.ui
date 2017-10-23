@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>572</width>
-    <height>506</height>
+    <width>455</width>
+    <height>389</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,7 +28,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit"/>
+          <widget class="QLineEdit" name="m_leName"/>
          </item>
         </layout>
        </item>
@@ -42,7 +42,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_2"/>
+          <widget class="QLineEdit" name="m_lePwd1"/>
          </item>
          <item>
           <widget class="QLabel" name="label_4">
@@ -52,7 +52,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_3"/>
+          <widget class="QLineEdit" name="m_lePwd2"/>
          </item>
         </layout>
        </item>
@@ -86,7 +86,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QPlainTextEdit" name="plainTextEdit"/>
+       <widget class="QPlainTextEdit" name="m_teInfo"/>
       </item>
      </layout>
     </widget>
@@ -107,7 +107,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="m_pbRegister">
        <property name="text">
         <string>Register</string>
        </property>

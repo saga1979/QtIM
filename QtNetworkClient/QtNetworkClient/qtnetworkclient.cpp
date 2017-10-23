@@ -1,6 +1,7 @@
 #include "qtnetworkclient.h"
 #include "userregister.h"
 #include "userlogin.h"
+#include "command_def.h"
 
 #include <QTcpSocket>
 #include <QHostAddress>
@@ -19,6 +20,8 @@ QtNetworkClient::QtNetworkClient(QWidget *parent)
 	m_userRegister = new UserRegister(this);
 	connect(ui.m_acRegisterUser, &QAction::triggered, m_userRegister, &UserRegister::exec);
 	ui.m_acRegisterUser->setIcon(QIcon(":/menu/resources/user_register.png"));
+	//响应用户注册事件
+	QObject::connect(m_userRegister, SIGNAL(userRegister()), this, SLOT(OnUserRegister()));
 	//用户登录
 	m_userLogin = new UserLogin(this);
 
@@ -66,5 +69,20 @@ void QtNetworkClient::OnDataReadyRead()
 	//string str = data.toStdString();
 
 	ui.m_lwMessages->addItem(data);
+}
+
+void QtNetworkClient::OnUserRegister()
+{
+	CommandRegister* cmd = m_userRegister->message();
+
+	if (cmd == 0)
+	{
+		return;
+	}
+
+	string data =  cmd->to_data();
+
+	m_socket->write(data.data(), data.length());
+
 }
 

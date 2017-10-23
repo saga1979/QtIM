@@ -116,5 +116,8 @@
     <ClInclude Include="GeneratedFiles\ui_userlogin.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_userregister.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

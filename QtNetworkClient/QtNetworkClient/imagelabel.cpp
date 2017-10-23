@@ -18,6 +18,13 @@ void ImageLabel::setImage(const QString & file)
 	QPixmap image = QPixmap::fromImageReader(&ir);
 
 	this->setPixmap(image.scaled(this->size()));
+
+	m_file = file;
+}
+
+const QString & ImageLabel::getImage() const
+{
+	return m_file;
 }
 
 void ImageLabel::mousePressEvent(QMouseEvent * event)

@@ -1,6 +1,10 @@
 #ifndef __COMMAND_DEF_H__
 #define __COMMAND_DEF_H__
 
+
+#include "qtnetworkplatform_global.h"
+
+
 #include <string>
 #include <cstdint>
 
@@ -37,7 +41,7 @@ struct CommandMessage : public Command
 };
 
 
-struct CommandRegister : public Command
+struct QTNETWORKPLATFORM_EXPORT CommandRegister : public Command
 {
 	string name;
 	string pwd;
@@ -53,7 +57,7 @@ struct CommandRegister : public Command
 };
 
 
-struct Package : public ISerializable
+struct QTNETWORKPLATFORM_EXPORT Package : public ISerializable
 {
 	Package();
 	~Package();
