@@ -28,7 +28,7 @@ struct Command : public ISerializable
 {
 	virtual  CommandType type() const = 0;
 
-	virtual uint16_t len() = 0;
+	virtual  int  length() const = 0;
 
 };
 
@@ -44,7 +44,7 @@ struct QTNETWORKPLATFORM_EXPORT CommandRegister : public Command
 	virtual void from_data(const string &) override;
 	virtual  CommandType type() const;
 	// Inherited via CommandMessage
-	virtual uint16_t len() override;
+	virtual int  length() const override;
 };
 
 
@@ -55,6 +55,8 @@ struct QTNETWORKPLATFORM_EXPORT Package : public ISerializable
 	~Package();
 
 	Command *command;
+
+	int data_len() const;
 
 	// Inherited via ISerializable
 	virtual const string to_data() const override;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <QtSql>
 #include "ui_QtNetworkServer.h"
 
 #include <list>
@@ -9,6 +10,7 @@
 
 class QTcpServer;
 class QTcpSocket;
+
 
 class QtNetworkServer : public QMainWindow
 {
@@ -28,4 +30,5 @@ private:
 	QTcpServer* m_tcpServer;
 	std::list<QTcpSocket*> m_clients;
 	std::map<QTcpSocket*, std::string*> m_clientBuffs;
+	QSqlDatabase m_database;
 };
