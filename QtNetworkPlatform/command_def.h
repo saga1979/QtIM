@@ -26,18 +26,10 @@ struct ISerializable
 
 struct Command : public ISerializable
 {
-	CommandType type;
+	virtual  CommandType type() const = 0;
 
 	virtual uint16_t len() = 0;
 
-};
-
-struct CommandMessage : public Command
-{
-	// Inherited via Command
-	virtual const string to_data() const override;
-	virtual void from_data(const string &) override;
-	virtual uint16_t len() override;
 };
 
 
@@ -47,11 +39,10 @@ struct QTNETWORKPLATFORM_EXPORT CommandRegister : public Command
 	string pwd;
 	string info;
 	string img;
-
 	// Inherited via CommandMessage
 	virtual const string  to_data() const override;
 	virtual void from_data(const string &) override;
-
+	virtual  CommandType type() const;
 	// Inherited via CommandMessage
 	virtual uint16_t len() override;
 };
@@ -60,15 +51,17 @@ struct QTNETWORKPLATFORM_EXPORT CommandRegister : public Command
 struct QTNETWORKPLATFORM_EXPORT Package : public ISerializable
 {
 	Package();
+	Package(Command* cmd);
 	~Package();
 
-	Command *message;
+	Command *command;
 
 	// Inherited via ISerializable
 	virtual const string to_data() const override;
 
 	virtual void from_data(const string &) override;
 
+	static const string to_data(const Command&);
 };
 
 

@@ -21,12 +21,16 @@ static string get_value(const string& data, const string& name)
 	return get_value(data, field_start, field_end);
 }
 
+CommandType CommandRegister::type() const
+{
+	return CT_REGISTER;
+}
 const string  CommandRegister::to_data() const
 {
 	string data;
 
 	data += "<type>";
-	uint32_t tmp = type;
+	uint32_t tmp = type();
 	data.append((const char*)&tmp, sizeof(uint32_t));	
 	data += "</type>";
 		
@@ -50,8 +54,7 @@ const string  CommandRegister::to_data() const
 }
 
 void CommandRegister::from_data(const string &data)
-{
-	type = (CommandType) *(uint32_t*)(get_value(data, "type").data());
+{	
 	name = get_value(data, "name");
 	pwd = get_value(data, "pwd");
 	info = get_value(data, "info");
@@ -68,25 +71,34 @@ uint16_t CommandRegister::len()
 static const char* package_start = "start";
 static const char* package_end = "end";
 
-Package::Package():message(0)
+Package::Package():command(0)
+{
+}
+
+Package::Package(Command * cmd):command(cmd)
 {
 }
 
 Package::~Package()
 {
-	if (message != 0)
+	if (command != 0)
 	{
-		delete message;
+		delete command;
 	}
 }
 
 const string Package::to_data() const
 {
+	return Package::to_data(*this->command);
+}
+
+const string Package::to_data(const Command& cmd)
+{
 	string data;
 
 	data += package_start;
 
-	string tData = message->to_data();
+	string tData = cmd.to_data();
 
 	uint16_t len = tData.length();
 	data.append((const char*)&len, sizeof(uint16_t));
@@ -95,17 +107,19 @@ const string Package::to_data() const
 
 	data.append(package_end);
 
-
 	return data;
+
 }
 
 void Package::from_data(const string &data)
 {
 	size_t start = data.find(package_start);
+	size_t end_index = data.find(package_end);
 
-	if (start == string::npos)
+	if (start == string::npos || end_index == string::npos)
 	{
-		return;
+		return;//初步校验包是否完整
+		//还需要根据数据长度确认在符合协议规范的位置出现结尾标识
 	}
 
 	start += strlen(package_start);
@@ -122,36 +136,15 @@ void Package::from_data(const string &data)
 	{
 	case CT_REGISTER:
 	{
-		message = new CommandRegister;		
+		command = new CommandRegister;		
 	}
 	break;
 	case CT_MESSAGE:
-	{
-		message = new CommandMessage;
-	}
-	break;
 	default:
 		break;
 	}
-
-	if (message != 0)
+	if (command != 0)
 	{
-		message->from_data(cmd_data);
+		command->from_data(cmd_data);
 	}
-
-
-}
-
-const string CommandMessage::to_data() const
-{
-	return string();
-}
-
-void CommandMessage::from_data(const string &)
-{
-}
-
-uint16_t CommandMessage::len()
-{
-	return uint16_t();
 }

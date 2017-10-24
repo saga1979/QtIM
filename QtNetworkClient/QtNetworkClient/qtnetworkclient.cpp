@@ -78,9 +78,8 @@ void QtNetworkClient::OnUserRegister()
 	if (cmd == 0)
 	{
 		return;
-	}
-
-	string data =  cmd->to_data();
+	}	
+	string data = Package::to_data(*cmd);
 
 	m_socket->write(data.data(), data.length());
 

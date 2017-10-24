@@ -4,6 +4,8 @@
 #include "ui_QtNetworkServer.h"
 
 #include <list>
+#include <map>
+#include <string>
 
 class QTcpServer;
 class QTcpSocket;
@@ -19,9 +21,11 @@ private slots:
 	void OnStartClick();
 	void OnNewConnection();
 	void OnSendClick();
+	void OnClientReadyRead();
 
 private:
 	Ui::QtNetworkServerClass ui;
 	QTcpServer* m_tcpServer;
 	std::list<QTcpSocket*> m_clients;
+	std::map<QTcpSocket*, std::string*> m_clientBuffs;
 };
