@@ -29,8 +29,8 @@
      <rect>
       <x>10</x>
       <y>40</y>
-      <width>530</width>
-      <height>148</height>
+      <width>101</width>
+      <height>211</height>
      </rect>
     </property>
    </widget>
@@ -70,6 +70,13 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuManager">
+    <property name="title">
+     <string>Manager</string>
+    </property>
+    <addaction name="actionUsers"/>
+   </widget>
+   <addaction name="menuManager"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -80,6 +87,11 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionUsers">
+   <property name="text">
+    <string>Users</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

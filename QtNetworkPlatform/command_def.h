@@ -30,6 +30,8 @@ struct Command : public ISerializable
 
 	virtual  int  length() const = 0;
 
+	virtual ~Command() {}
+
 };
 
 
@@ -54,7 +56,7 @@ struct QTNETWORKPLATFORM_EXPORT Package : public ISerializable
 	Package(Command* cmd);
 	~Package();
 
-	Command *command;
+	const Command* getCmd()const ;
 
 	int data_len() const;
 
@@ -64,6 +66,9 @@ struct QTNETWORKPLATFORM_EXPORT Package : public ISerializable
 	virtual void from_data(const string &) override;
 
 	static const string to_data(const Command&);
+
+private:
+	Command *command;
 };
 
 

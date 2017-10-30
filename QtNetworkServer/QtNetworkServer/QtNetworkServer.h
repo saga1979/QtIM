@@ -24,11 +24,13 @@ private slots:
 	void OnNewConnection();
 	void OnSendClick();
 	void OnClientReadyRead();
+	void OnUserSelected(QListWidgetItem*);
+	void OnUserManagerClick();
 
 private:
 	Ui::QtNetworkServerClass ui;
 	QTcpServer* m_tcpServer;
 	std::list<QTcpSocket*> m_clients;
 	std::map<QTcpSocket*, std::string*> m_clientBuffs;
-	QSqlDatabase m_database;
+	QTabWidget* m_twUserInfoShower;
 };

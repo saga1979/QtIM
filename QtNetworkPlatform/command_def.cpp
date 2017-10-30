@@ -113,7 +113,7 @@ const string Package::to_data(const Command& cmd)
 	string tData = cmd.to_data();
 
 	LenType len = tData.length();
-	data.append((const char*)&len, sizeof(LenType));//两个字节标识命令数据长度
+	data.append((const char*)&len, sizeof(LenType));//标识命令数据长度
 
 	data.append(tData);//命令数据
 
@@ -131,6 +131,11 @@ int Package::data_len() const
 		return -1;
 	}
 	return strlen(package_start) + sizeof(LenType) + command->length() + strlen(package_end);
+}
+
+const Command* Package::getCmd() const
+{
+	return command;
 }
 void Package::from_data(const string &data)
 {

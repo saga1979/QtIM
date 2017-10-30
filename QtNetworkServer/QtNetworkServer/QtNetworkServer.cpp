@@ -1,6 +1,5 @@
 #include <QTcpServer>
 #include <QTcpSocket>
-#include <QtSql>
 #include <QUuid>
 #include <QTabWidget>
 #include <QGridLayout>
@@ -8,82 +7,37 @@
 #include "QtNetworkServer.h"
 #include "command_def.h"
 
+#include "userinfoshower.h"
+#include "datasource.h"
+
 using namespace std;
 
 QtNetworkServer::QtNetworkServer(QWidget *parent)
-	: QMainWindow(parent), m_tcpServer(0)
+	: QMainWindow(parent), m_tcpServer(0), m_twUserInfoShower(0)
 {
 	ui.setupUi(this);
 	//布局
-	QWidget *center = new QWidget(this);
-	this->setCentralWidget(center);
-	
+	QWidget *center = this->centralWidget();
 
 	QGridLayout * grid = new QGridLayout;
 	grid->setColumnStretch(1, 2);
+	
 	center->setLayout(grid);
 
 	grid->addWidget(ui.m_lwUsers, 0, 0, 1, 1);
 	grid->addWidget(ui.lineEdit, 1, 0, 1, 2);
 	grid->addWidget(ui.m_btSend, 1, 2,1,1);
 	grid->addWidget(ui.m_btStart, 1, 3, 1,1);
-	QTabWidget* tab = new QTabWidget;
-	grid->addWidget(tab, 0, 1, 1, 3);
-
-
+	m_twUserInfoShower = new QTabWidget;
+	m_twUserInfoShower->setTabsClosable(true);
+	grid->addWidget(m_twUserInfoShower, 0, 1, 1, 3);
 
 	ui.m_btSend->setDisabled(true);
+	//设置事件
 	QObject::connect(ui.m_btStart, SIGNAL(clicked()), this, SLOT(OnStartClick()));
 	QObject::connect(ui.m_btSend, SIGNAL(clicked()), this, SLOT(OnSendClick()));
-
-	
-	
-
-	m_database = QSqlDatabase::addDatabase("QMYSQL");
-	
-
-	m_database.setHostName("127.0.0.1");
-	m_database.setDatabaseName("im");
-	m_database.setUserName("root");
-	m_database.setPassword("root");
-
-	if (!m_database.open())
-	{
-		return;
-	}
-
-	QSqlQuery query;
-	query.prepare("select * from users;");
-
-	if (query.exec())
-	{
-
-		while (query.next())
-		{
-			QString name = query.value("name").toString();
-			QListWidgetItem* item = new QListWidgetItem(ui.m_lwUsers);
-			item->setText(name);
-			
-			QPixmap pix;
-			QByteArray bytes = query.value("img").toByteArray();
-
-#ifdef _DEBUG
-			QFile file("d:\\tmp\\test.png");
-			file.open(QFile::WriteOnly);
-			file.write(bytes);
-			file.close();
-#endif	
-			if (pix.loadFromData(bytes))
-			{
-				QIcon icon(pix);
-
-				item->setIcon(icon);
-			}
-			
-		}
-
-
-	}
+	QObject::connect(ui.m_lwUsers, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(OnUserSelected(QListWidgetItem*)));
+	QObject::connect(ui.actionUsers, SIGNAL(triggered()), this, SLOT(OnUserManagerClick()));
 }
 
 void QtNetworkServer::OnStartClick()
@@ -167,39 +121,42 @@ void QtNetworkServer::OnClientReadyRead()
 
 		package.from_data(*buf);
 
-		QString fff= QString::fromStdString(*buf);
-		
 
-		CommandRegister* cmd = (CommandRegister*)package.command;
+		CommandRegister* cmd = ( CommandRegister*)(package.getCmd());
 
 		if (cmd == 0)
 		{
 			continue;
 		}
-#ifdef _DEBUG
-		QFile file("d:\\tmp\\1.png");
-		file.open(QFile::WriteOnly);
-		file.write(cmd->img.data(), cmd->img.length());
-		file.close();
-#endif		
 
-		if (!m_database.isOpen() && !m_database.open())
-		{
-			continue;
-		}
-		QSqlQuery query;
-		query.prepare("insert into users (id, name, pwd, img) values(:id, :name, :pwd, :img);");
-		query.bindValue(":id", QUuid::createUuid().toString());
-		query.bindValue(":name", cmd->name.c_str());
-		query.bindValue(":pwd", cmd->pwd.c_str());
-		
-		query.bindValue(":img", QByteArray::fromStdString(cmd->img));
+		UserInfo info;
+		info.name = QString::fromStdString( cmd->name);
+		info.pwd = QString::fromStdString(cmd->pwd);
+		info.img = QByteArray::fromRawData(cmd->img.data(), cmd->img.length());
 
-		if (!query.exec())
-		{
-			qDebug() << query.lastError();
-		}	
-				
+		DataSource::Instance().RegisterUser(info);				
 	}
 
+}
+
+void QtNetworkServer::OnUserSelected(QListWidgetItem *item)
+{
+	QString id = item->text();
+
+	UserInfo* info = DataSource::Instance().getUserInfo(id);
+
+	m_twUserInfoShower->addTab(new UserInfoShower(info), info->name);
+}
+
+void QtNetworkServer::OnUserManagerClick()
+{
+	ui.m_lwUsers->clear();
+	QStringList sl = DataSource::Instance().getAllUserID();
+	
+
+	for (QStringList::iterator it = sl.begin(); it != sl.end(); it++)
+	{
+		QListWidgetItem* item = new QListWidgetItem(ui.m_lwUsers);
+		item->setText(*it);
+	}
 }
