@@ -56,12 +56,13 @@ const string  CommandRegister::to_data() const
 	return data;
 }
 
-void CommandRegister::from_data(const string &data)
+int CommandRegister::from_data(const string &data)
 {	
 	name = get_value(data, "name");
 	pwd = get_value(data, "pwd");
 	info = get_value(data, "info");
 	img = get_value(data, "img");
+	return 0;
 }
 
 int  CommandRegister::length () const
@@ -137,14 +138,14 @@ const Command* Package::getCmd() const
 {
 	return command;
 }
-void Package::from_data(const string &data)
+int  Package::from_data(const string &data)
 {
 	size_t start = data.find(package_start);
 	size_t end_index = data.find(package_end);
 
 	if (start == string::npos || end_index == string::npos)
 	{
-		return;//初步校验包是否完整
+		return -1;//初步校验包是否完整
 		//还需要根据数据长度确认在符合协议规范的位置出现结尾标识
 	}
 
@@ -165,12 +166,63 @@ void Package::from_data(const string &data)
 		command = new CommandRegister;		
 	}
 	break;
+	case CT_REGISTER_RESPONSE:
+	{
+		command = new CommandRegisterResponse;
+	}
+	break;
 	case CT_MESSAGE:
 	default:
 		break;
 	}
-	if (command != 0)
+	if (command == 0)
 	{
-		command->from_data(cmd_data);
+		return -1;
 	}
+	command->from_data(cmd_data);
+	return end_index + strlen(package_end);
+}
+CommandRegisterResponse::CommandRegisterResponse():success(false)
+{
+
+}
+//<type>xxx</type><success>1</success>
+const string CommandRegisterResponse::to_data() const
+{
+	string data;
+
+	data += "<type>";
+	uint32_t tmp = type();
+	data.append((const char*)&tmp, sizeof(EnumType));
+	data += "</type>";
+
+	data += "<success>";
+	data += success?"1":"0";
+	data += "</success>";
+
+	return data;
+
+}
+
+int  CommandRegisterResponse::from_data(const string &data)
+{
+	string str = get_value(data, "success");
+
+	success = (str == "0" ? false : true);
+
+	return 0;
+}
+
+CommandType CommandRegisterResponse::type() const
+{
+	return CT_REGISTER_RESPONSE;
+}
+
+int CommandRegisterResponse::length() const
+{
+	int len = strlen("<type>") * 2 + 1;
+	len += strlen("<success>") * 2 + 1;
+	len += sizeof(EnumType);
+	len += 1;
+	return len;//<success>1</success>
 }

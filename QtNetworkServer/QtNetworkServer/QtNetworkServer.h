@@ -26,6 +26,7 @@ private slots:
 	void OnClientReadyRead();
 	void OnUserSelected(QListWidgetItem*);
 	void OnUserManagerClick();
+	void OnCloseUserShowTab(int);
 
 private:
 	Ui::QtNetworkServerClass ui;

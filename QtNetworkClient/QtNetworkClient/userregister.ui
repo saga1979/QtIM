@@ -114,7 +114,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="m_pbCancel">
        <property name="text">
         <string>cancel</string>
        </property>
@@ -133,5 +133,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>m_pbCancel</sender>
+   <signal>clicked()</signal>
+   <receiver>UserRegister</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>407</x>
+     <y>367</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>227</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

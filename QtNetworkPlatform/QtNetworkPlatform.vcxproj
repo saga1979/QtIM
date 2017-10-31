@@ -69,11 +69,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="command_def.cpp" />
-    <ClCompile Include="qtnetworkplatform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command_def.h" />
-    <ClInclude Include="qtnetworkplatform.h" />
     <ClInclude Include="qtnetworkplatform_global.h" />
   </ItemGroup>
   <ItemGroup>

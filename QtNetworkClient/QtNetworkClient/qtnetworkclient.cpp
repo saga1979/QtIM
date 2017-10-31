@@ -5,13 +5,14 @@
 
 #include <QTcpSocket>
 #include <QHostAddress>
+#include <QMessageBox>
 
 
 #include <string>
 using namespace std;
 
 QtNetworkClient::QtNetworkClient(QWidget *parent)
-	: QMainWindow(parent),m_socket(0), m_userLogin(0), m_userRegister(0)
+	: QMainWindow(parent),m_socket(0), m_userLogin(0), m_userRegister(0),m_lastCommand(CT_END)
 {
 	ui.setupUi(this);
 	QObject::connect(ui.m_btConnect, SIGNAL(clicked()), this, SLOT(OnConnectClick()));
@@ -66,9 +67,45 @@ void QtNetworkClient::OnDataReadyRead()
 {
 	QByteArray data =  m_socket->readAll();
 
-	//string str = data.toStdString();
+	m_socketBuff.append(data.toStdString());
 
-	ui.m_lwMessages->addItem(data);
+	Package package;
+
+	int index = package.from_data(m_socketBuff);
+
+	if (index <= 0)
+	{
+		return;
+	}
+
+	m_socketBuff.erase(0, index);//把已经解析的数据从缓冲区清除
+
+
+	switch (package.getCmd()->type())
+	{
+	case CT_REGISTER_RESPONSE:
+	{
+		CommandRegisterResponse* cmd = (CommandRegisterResponse*)(package.getCmd());
+
+		if (cmd == 0)
+		{
+			break;
+		}
+
+		if (cmd->success)//注册成功
+		{
+			m_userRegister->close();
+		}
+		else
+		{
+			QMessageBox::critical(m_userRegister, "error", "failed to register!");
+		}
+
+	}
+	break;
+	default:
+		break;
+	}
 }
 
 void QtNetworkClient::OnUserRegister()
@@ -82,6 +119,7 @@ void QtNetworkClient::OnUserRegister()
 	string data = Package::to_data(*cmd);
 
 	m_socket->write(data.data(), data.length());
+	m_lastCommand = CT_REGISTER;
 
 }
 

@@ -26,17 +26,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="qtnetworkplatform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="command_def.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="qtnetworkplatform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="command_def.h">
       <Filter>Header Files</Filter>
     </ClInclude>

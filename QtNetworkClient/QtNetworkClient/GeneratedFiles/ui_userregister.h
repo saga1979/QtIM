@@ -48,7 +48,7 @@ public:
     QHBoxLayout *horizontalLayout_3;
     QSpacerItem *horizontalSpacer;
     QPushButton *m_pbRegister;
-    QPushButton *pushButton_2;
+    QPushButton *m_pbCancel;
 
     void setupUi(QWidget *UserRegister)
     {
@@ -146,16 +146,17 @@ public:
 
         horizontalLayout_3->addWidget(m_pbRegister);
 
-        pushButton_2 = new QPushButton(UserRegister);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        m_pbCancel = new QPushButton(UserRegister);
+        m_pbCancel->setObjectName(QStringLiteral("m_pbCancel"));
 
-        horizontalLayout_3->addWidget(pushButton_2);
+        horizontalLayout_3->addWidget(m_pbCancel);
 
 
         verticalLayout_3->addLayout(horizontalLayout_3);
 
 
         retranslateUi(UserRegister);
+        QObject::connect(m_pbCancel, SIGNAL(clicked()), UserRegister, SLOT(close()));
 
         QMetaObject::connectSlotsByName(UserRegister);
     } // setupUi
@@ -169,7 +170,7 @@ public:
         m_lbImage->setText(QString());
         groupBox->setTitle(QApplication::translate("UserRegister", "Person Infomation", Q_NULLPTR));
         m_pbRegister->setText(QApplication::translate("UserRegister", "Register", Q_NULLPTR));
-        pushButton_2->setText(QApplication::translate("UserRegister", "cancel", Q_NULLPTR));
+        m_pbCancel->setText(QApplication::translate("UserRegister", "cancel", Q_NULLPTR));
     } // retranslateUi
 
 };

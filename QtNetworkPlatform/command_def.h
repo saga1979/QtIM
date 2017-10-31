@@ -13,6 +13,7 @@ using std::string;
 enum CommandType
 {
 	CT_REGISTER,
+	CT_REGISTER_RESPONSE,
 	CT_MESSAGE,
 
 	CT_END
@@ -21,7 +22,7 @@ enum CommandType
 struct ISerializable
 {
 	virtual const string to_data() const = 0;
-	virtual void from_data(const string&) = 0;
+	virtual int from_data(const string&) = 0;
 };
 
 struct Command : public ISerializable
@@ -43,7 +44,19 @@ struct QTNETWORKPLATFORM_EXPORT CommandRegister : public Command
 	string img;
 	// Inherited via CommandMessage
 	virtual const string  to_data() const override;
-	virtual void from_data(const string &) override;
+	virtual int from_data(const string &) override;
+	virtual  CommandType type() const;
+	// Inherited via CommandMessage
+	virtual int  length() const override;
+};
+
+struct QTNETWORKPLATFORM_EXPORT CommandRegisterResponse : public Command
+{
+	CommandRegisterResponse();
+	bool success;
+	// Inherited via CommandMessage
+	virtual const string  to_data() const override;
+	virtual int  from_data(const string &) override;
 	virtual  CommandType type() const;
 	// Inherited via CommandMessage
 	virtual int  length() const override;
@@ -63,7 +76,7 @@ struct QTNETWORKPLATFORM_EXPORT Package : public ISerializable
 	// Inherited via ISerializable
 	virtual const string to_data() const override;
 
-	virtual void from_data(const string &) override;
+	virtual int  from_data(const string &) override;
 
 	static const string to_data(const Command&);
 

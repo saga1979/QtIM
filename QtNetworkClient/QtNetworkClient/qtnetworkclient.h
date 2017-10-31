@@ -1,7 +1,9 @@
 #pragma once
 
+#include <string>
 #include <QtWidgets/QMainWindow>
 #include "ui_qtnetworkclient.h"
+#include "command_def.h"
 
 #include <QTcpSocket>
 
@@ -27,4 +29,6 @@ private:
 	QTcpSocket* m_socket;
 	UserRegister *m_userRegister;
 	UserLogin *m_userLogin;
+	std::string m_socketBuff;
+	CommandType m_lastCommand;
 };

@@ -38,6 +38,7 @@ QtNetworkServer::QtNetworkServer(QWidget *parent)
 	QObject::connect(ui.m_btSend, SIGNAL(clicked()), this, SLOT(OnSendClick()));
 	QObject::connect(ui.m_lwUsers, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(OnUserSelected(QListWidgetItem*)));
 	QObject::connect(ui.actionUsers, SIGNAL(triggered()), this, SLOT(OnUserManagerClick()));
+	QObject::connect(m_twUserInfoShower, SIGNAL(tabCloseRequested(int)), this, SLOT(OnCloseUserShowTab(int)));
 }
 
 void QtNetworkServer::OnStartClick()
@@ -106,10 +107,9 @@ void QtNetworkServer::OnClientReadyRead()
 		QTcpSocket* socket = *it;
 
 		if (!socket->isReadable())
-		{			
+		{
 			continue;
-		}	
-
+		}
 		
 		QByteArray bytes =  socket->readAll();
 
@@ -119,22 +119,49 @@ void QtNetworkServer::OnClientReadyRead()
 
 		Package package;
 
-		package.from_data(*buf);
+		int index = package.from_data(*buf);
 
-
-		CommandRegister* cmd = ( CommandRegister*)(package.getCmd());
-
-		if (cmd == 0)
+		if (index <= 0)
 		{
 			continue;
 		}
 
-		UserInfo info;
-		info.name = QString::fromStdString( cmd->name);
-		info.pwd = QString::fromStdString(cmd->pwd);
-		info.img = QByteArray::fromRawData(cmd->img.data(), cmd->img.length());
+		buf->erase(0, index);//清理已经读取的数据
 
-		DataSource::Instance().RegisterUser(info);				
+		switch (package.getCmd()->type())
+		{
+		case CT_REGISTER:
+		{
+			CommandRegister* cmd = (CommandRegister*)(package.getCmd());
+
+			if (cmd == 0)
+			{
+				continue;
+			}
+
+			UserInfo info;
+			info.name = QString::fromStdString(cmd->name);
+			info.pwd = QString::fromStdString(cmd->pwd);
+			info.img = QByteArray::fromRawData(cmd->img.data(), cmd->img.length());
+
+			CommandRegisterResponse response;
+			
+			string data = Package::to_data(response);
+
+			if (DataSource::Instance().RegisterUser(info))
+			{
+				response.success = true;
+			}
+
+			socket->write(data.data(), data.length());
+
+		}
+		break;
+		default:
+			break;
+		}
+
+					
 	}
 
 }
@@ -145,7 +172,24 @@ void QtNetworkServer::OnUserSelected(QListWidgetItem *item)
 
 	UserInfo* info = DataSource::Instance().getUserInfo(id);
 
-	m_twUserInfoShower->addTab(new UserInfoShower(info), info->name);
+	
+	int index = -1;
+
+	for (; index < m_twUserInfoShower->count(); index++)
+	{
+		QString label = m_twUserInfoShower->tabText(index);
+		if (label == info->name)
+		{			
+			break;
+		}
+	}
+	if (index == m_twUserInfoShower->count())
+	{
+		index = m_twUserInfoShower->addTab(new UserInfoShower(info), info->name);
+	}
+
+	m_twUserInfoShower->setCurrentIndex(index);
+	
 }
 
 void QtNetworkServer::OnUserManagerClick()
@@ -159,4 +203,9 @@ void QtNetworkServer::OnUserManagerClick()
 		QListWidgetItem* item = new QListWidgetItem(ui.m_lwUsers);
 		item->setText(*it);
 	}
+}
+
+void QtNetworkServer::OnCloseUserShowTab(int index)
+{
+	m_twUserInfoShower->removeTab(index);
 }
