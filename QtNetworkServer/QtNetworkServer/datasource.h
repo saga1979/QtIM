@@ -3,6 +3,8 @@
 
 #include <QtCore>
 #include <QtSql>
+#include <string>
+using std::string;
 
 struct UserInfo
 {
@@ -23,6 +25,7 @@ public:
 	virtual ~DataSource();
 	static DataSource& Instance();
 	UserInfo* getUserInfo(const QString&);
+	UserInfo* getUserInfo(const string&);
 	
 	//QList<QVariant> getUserInfoField(const QString& id, QStringList fields);
 

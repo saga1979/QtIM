@@ -29,33 +29,14 @@ QtNetworkClient::QtNetworkClient(QWidget *parent)
 	QAction *action = ui.m_menuUser->addAction("Login");
 	action->setIcon(QIcon(":/menu/resources/user_login.png"));
 	connect(action, &QAction::triggered, m_userLogin, &UserLogin::exec);
+	//响应用户登陆结果
+
+	QObject::connect(m_userLogin, SIGNAL(LoginResponse(QTcpSocket*)), this, SLOT(OnLoginResponse(QTcpSocket*)));
 
 
 }
 
-void QtNetworkClient::OnConnectClick()
-{
-	if (m_socket == 0) 
-	{
-		m_socket = new QTcpSocket;
-		QObject::connect(m_socket, SIGNAL(connected()), this, SLOT(OnConnected()));
-		QObject::connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(OnSocketError(QAbstractSocket::SocketError)));
-		QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(OnDataReadyRead()));
-	}
 
-	//QHostAddress ha("127.0.0.1");
-
-	m_socket->connectToHost("127.0.0.1", 8001);
-
-	ui.m_btConnect->setDisabled(true);
-	ui.m_btConnect->setText("connectiong...");
-	
-}
-
-void QtNetworkClient::OnConnected()
-{
-	ui.m_btConnect->setText("connected");
-}
 
 void QtNetworkClient::OnSocketError(QAbstractSocket::SocketError error)
 {
@@ -121,5 +102,21 @@ void QtNetworkClient::OnUserRegister()
 	m_socket->write(data.data(), data.length());
 	m_lastCommand = CT_REGISTER;
 
+}
+
+void QtNetworkClient::OnLoginResponse(QTcpSocket *socket)
+{
+	if (socket == 0)
+	{
+		return; //连接服务器失败 todo...
+	}
+	if (m_socket != 0)
+	{
+		delete m_socket;
+	}
+	m_socket = socket;
+	QObject::connect(m_socket, SIGNAL(connected()), this, SLOT(OnConnected()));
+	QObject::connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(OnSocketError(QAbstractSocket::SocketError)));
+	QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(OnDataReadyRead()));
 }
 

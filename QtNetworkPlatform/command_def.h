@@ -14,7 +14,10 @@ enum CommandType
 {
 	CT_REGISTER,
 	CT_REGISTER_RESPONSE,
+	CT_LOGIN,
+	CT_LOGIN_RESPONSE,
 	CT_MESSAGE,
+	CT_GENERAL_RESPONSE,
 
 	CT_END
 };
@@ -33,6 +36,19 @@ struct Command : public ISerializable
 
 	virtual ~Command() {}
 
+};
+//<request>0</request><success>1<success><msg>xxx</msg>
+struct QTNETWORKPLATFORM_EXPORT GeneralResponse : public Command
+{
+	GeneralResponse();
+	CommandType request;
+	bool success;
+	string msg;
+	// Inherited via Command
+	virtual const string to_data() const override;
+	virtual int from_data(const string &) override;
+	virtual CommandType type() const override;
+	virtual int length() const override;
 };
 
 
@@ -60,6 +76,18 @@ struct QTNETWORKPLATFORM_EXPORT CommandRegisterResponse : public Command
 	virtual  CommandType type() const;
 	// Inherited via CommandMessage
 	virtual int  length() const override;
+};
+
+
+struct QTNETWORKPLATFORM_EXPORT CommandLogin : public Command
+{
+	string name;
+	string pwd;
+	// Inherited via Command
+	virtual const string to_data() const override;
+	virtual int from_data(const string &) override;
+	virtual CommandType type() const override;
+	virtual int length() const override;
 };
 
 

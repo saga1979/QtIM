@@ -61,6 +61,24 @@ void QtNetworkServer::OnStartClick()
 	ui.m_btStart->setDisabled(true);
 }
 
+QtNetworkServer::~QtNetworkServer()
+{
+	for (list<OnlineUserInfo*>::iterator it = m_onlineUsers.begin(); it != m_onlineUsers.end(); it++)
+	{
+		delete *it;
+	}
+
+	for (list<QTcpSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
+	{
+		delete *it;
+	}
+
+	for (map<QTcpSocket*, std::string*>::iterator it = m_clientBuffs.begin(); it != m_clientBuffs.end(); it++)
+	{
+		delete  (*it).second;
+	}	
+}
+
 void QtNetworkServer::OnNewConnection()
 {
 	QTcpSocket* client = m_tcpServer->nextPendingConnection();
@@ -145,16 +163,54 @@ void QtNetworkServer::OnClientReadyRead()
 			info.img = QByteArray::fromRawData(cmd->img.data(), cmd->img.length());
 
 			CommandRegisterResponse response;
-			
-			string data = Package::to_data(response);
 
 			if (DataSource::Instance().RegisterUser(info))
 			{
 				response.success = true;
-			}
+			}			
+
+			string data = Package::to_data(response);
 
 			socket->write(data.data(), data.length());
 
+		}
+		break;
+		case CT_LOGIN:
+		{
+			CommandLogin* cmd = (CommandLogin*)package.getCmd();
+			//校验用户登陆是否合法
+
+			UserInfo* info = DataSource::Instance().getUserInfo(cmd->name);
+
+			GeneralResponse response;
+			
+			response.type = CT_LOGIN_RESPONSE;
+			if (info == 0)//没有此用户
+			{
+				response.msg = "user not exist";
+			}
+			else if (cmd->pwd != info->pwd.toStdString())//密码是否正确
+			{
+				response.msg = "password not correct";
+			}
+			else
+			{
+				response.success = true;
+			}
+
+			string data = Package::to_data(response);
+
+			socket->write(data.data(), data.length());
+
+			if (!response.success)
+			{
+				//如果不合法,关闭连接
+				m_clientBuffs.erase(socket);//删除该socket连接的Buff
+				delete socket;//关闭连接
+				it = m_clients.erase(it);//从连接列表中删除该连接
+				continue;
+			}
+						
 		}
 		break;
 		default:

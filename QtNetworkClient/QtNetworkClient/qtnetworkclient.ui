@@ -14,39 +14,6 @@
    <string>QtNetworkClient</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QLineEdit" name="lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>90</y>
-      <width>113</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBox">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>90</y>
-      <width>42</width>
-      <height>22</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="m_btConnect">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>90</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>connect</string>
-    </property>
-   </widget>
    <widget class="QListWidget" name="m_lwMessages">
     <property name="geometry">
      <rect>
@@ -87,6 +54,11 @@
   <action name="m_acRegisterUser">
    <property name="text">
     <string>Register</string>
+   </property>
+  </action>
+  <action name="m_acLogin">
+   <property name="text">
+    <string>Login</string>
    </property>
   </action>
  </widget>

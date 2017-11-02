@@ -226,3 +226,47 @@ int CommandRegisterResponse::length() const
 	len += 1;
 	return len;//<success>1</success>
 }
+
+GeneralResponse::GeneralResponse():success(false)
+{
+}
+
+const string GeneralResponse::to_data() const
+{
+	return string();
+}
+
+int GeneralResponse::from_data(const string &)
+{
+	return 0;
+}
+
+CommandType GeneralResponse::type() const
+{
+	return CommandType();
+}
+
+int GeneralResponse::length() const
+{
+	return 0;
+}
+
+const string CommandLogin::to_data() const
+{
+	return string();
+}
+
+int CommandLogin::from_data(const string &)
+{
+	return 0;
+}
+
+CommandType CommandLogin::type() const
+{
+	return CommandType();
+}
+
+int CommandLogin::length() const
+{
+	return 0;
+}

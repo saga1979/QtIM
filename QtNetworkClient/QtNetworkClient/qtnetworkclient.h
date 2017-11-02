@@ -2,14 +2,14 @@
 
 #include <string>
 #include <QtWidgets/QMainWindow>
+
 #include "ui_qtnetworkclient.h"
 #include "command_def.h"
 
-#include <QTcpSocket>
+#include "userlogin.h"
 
 
 class UserRegister;
-class UserLogin;
 class QtNetworkClient : public QMainWindow
 {
 	Q_OBJECT
@@ -18,11 +18,11 @@ public:
 	QtNetworkClient(QWidget *parent = Q_NULLPTR);
 
 private slots:
-    void OnConnectClick();
-	void OnConnected();
+
 	void OnSocketError(QAbstractSocket::SocketError);
 	void OnDataReadyRead();
 	void OnUserRegister();
+	void OnLoginResponse(QTcpSocket*);
 
 private:
 	Ui::QtNetworkClientClass ui;

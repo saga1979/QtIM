@@ -12,12 +12,20 @@ class QTcpServer;
 class QTcpSocket;
 
 
+#include <QDateTime>
+struct OnlineUserInfo
+{
+	QString name;
+	QDateTime loginTime;
+};
+
 class QtNetworkServer : public QMainWindow
 {
 	Q_OBJECT
 
 public:
 	QtNetworkServer(QWidget *parent = Q_NULLPTR);
+	~QtNetworkServer();
 
 private slots:
 	void OnStartClick();
@@ -32,6 +40,7 @@ private:
 	Ui::QtNetworkServerClass ui;
 	QTcpServer* m_tcpServer;
 	std::list<QTcpSocket*> m_clients;
+	std::list<OnlineUserInfo*> m_onlineUsers;
 	std::map<QTcpSocket*, std::string*> m_clientBuffs;
 	QTabWidget* m_twUserInfoShower;
 };

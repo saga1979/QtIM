@@ -56,6 +56,11 @@ UserInfo * DataSource::getUserInfo(const QString &id)
 	return info;
 }
 
+UserInfo * DataSource::getUserInfo(const string &name)
+{
+	return getUserInfo(QString::fromStdString(name));
+}
+
 QStringList DataSource::getAllUserID()
 {
 	QStringList sl;
