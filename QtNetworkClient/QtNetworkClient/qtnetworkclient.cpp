@@ -15,7 +15,6 @@ QtNetworkClient::QtNetworkClient(QWidget *parent)
 	: QMainWindow(parent),m_socket(0), m_userLogin(0), m_userRegister(0),m_lastCommand(CT_END)
 {
 	ui.setupUi(this);
-	QObject::connect(ui.m_btConnect, SIGNAL(clicked()), this, SLOT(OnConnectClick()));
 
 	//ÓÃ»§×¢²á
 	m_userRegister = new UserRegister(this);
@@ -40,8 +39,7 @@ QtNetworkClient::QtNetworkClient(QWidget *parent)
 
 void QtNetworkClient::OnSocketError(QAbstractSocket::SocketError error)
 {
-	ui.m_btConnect->setEnabled(true);
-	ui.m_btConnect->setText("connect");
+
 }
 
 void QtNetworkClient::OnDataReadyRead()

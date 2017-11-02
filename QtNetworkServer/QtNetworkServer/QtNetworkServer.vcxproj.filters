@@ -67,6 +67,15 @@
     <ClCompile Include="datasource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="process_register.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="process_login.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="process_factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="QtNetworkServer.h">
@@ -93,6 +102,18 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="datasource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="process_register.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="process_login.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="process_interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="process_factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

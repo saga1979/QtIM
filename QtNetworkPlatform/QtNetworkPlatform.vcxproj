@@ -68,10 +68,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="command_def.cpp" />
+    <ClCompile Include="command_factory.cpp" />
+    <ClCompile Include="command_login.cpp" />
+    <ClCompile Include="command_register.cpp" />
+    <ClCompile Include="command_register_response.cpp" />
+    <ClCompile Include="command_utilies.cpp" />
+    <ClCompile Include="command_general_response.cpp" />
+    <ClCompile Include="network_package.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command_def.h" />
+    <ClInclude Include="command_factory.h" />
+    <ClInclude Include="command_interface.h" />
+    <ClInclude Include="command_login.h" />
+    <ClInclude Include="command_register.h" />
+    <ClInclude Include="command_register_response.h" />
+    <ClInclude Include="command_type.h" />
+    <ClInclude Include="command_utilies.h" />
+    <ClInclude Include="command_general_response.h" />
+    <ClInclude Include="network_package.h" />
     <ClInclude Include="qtnetworkplatform_global.h" />
   </ItemGroup>
   <ItemGroup>

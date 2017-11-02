@@ -68,6 +68,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="process_factory.cpp" />
     <ClCompile Include="datasource.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_QtNetworkServer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -88,6 +89,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="process_login.cpp" />
+    <ClCompile Include="process_register.cpp" />
     <ClCompile Include="QtNetworkServer.cpp" />
     <ClCompile Include="userinfoshower.cpp" />
   </ItemGroup>
@@ -116,9 +119,13 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="process_interface.h" />
+    <ClInclude Include="process_factory.h" />
     <ClInclude Include="datasource.h" />
     <ClInclude Include="GeneratedFiles\ui_QtNetworkServer.h" />
     <ClInclude Include="GeneratedFiles\ui_userinfoshower.h" />
+    <ClInclude Include="process_login.h" />
+    <ClInclude Include="process_register.h" />
     <CustomBuild Include="userinfoshower.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing userinfoshower.h...</Message>
