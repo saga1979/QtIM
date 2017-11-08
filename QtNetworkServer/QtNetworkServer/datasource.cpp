@@ -1,6 +1,7 @@
 #include "datasource.h"
 
-
+#include <QTimer>
+#define MAX_USER 999999
 
 DataSource::DataSource()
 {
@@ -9,6 +10,39 @@ DataSource::DataSource()
 	m_sqlDatabase.setDatabaseName("im");
 	m_sqlDatabase.setUserName("root");
 	m_sqlDatabase.setPassword("root");
+}
+
+int DataSource::generateUserID() 
+{
+	qsrand(QTime::currentTime().msec());
+
+	if (!m_sqlDatabase.isOpen() && !m_sqlDatabase.open())
+	{
+		return -1;
+	}
+
+	QSqlQuery query;
+
+	while (1)
+	{
+		query.prepare("select count(*) from users where id = :id");
+
+		int id = qrand() % 999999 + 1;
+
+		query.bindValue(":id", QString::number(id));
+		if (!query.exec() || !query.next())
+		{
+			return -1;
+		}
+
+		if (query.value(0).toInt() == 0)
+		{
+			return id;
+		}
+	}
+
+
+	return -1;
 }
 
 
@@ -83,7 +117,7 @@ QStringList DataSource::getAllUserID()
 	return sl;
 }
 
-bool DataSource::RegisterUser(const UserInfo &info)
+bool DataSource::RegisterUser(UserInfo &info)
 {
 #ifdef _DEBUG
 	QFile file("d:\\tmp\\1.png");
@@ -97,9 +131,14 @@ bool DataSource::RegisterUser(const UserInfo &info)
 		return false;
 	}
 
+
+
 	QSqlQuery query;
 	query.prepare("insert into users (id, name, pwd, img) values(:id, :name, :pwd, :img);");
-	query.bindValue(":id", QUuid::createUuid().toString());
+
+	int id = generateUserID();
+
+	query.bindValue(":id", QString::number(id));
 	query.bindValue(":name", info.name);
 	query.bindValue(":pwd", info.pwd);
 
@@ -110,6 +149,6 @@ bool DataSource::RegisterUser(const UserInfo &info)
 		qDebug() << query.lastError();
 		return false;
 	}
-
+	info.id = QString::number(id);
 	return true;
 }

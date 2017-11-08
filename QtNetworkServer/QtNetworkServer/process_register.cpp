@@ -31,6 +31,7 @@ bool ProcessRegister::ProcessCommand(const Command *command, QIODevice *io)
 	if (DataSource::Instance().RegisterUser(info))
 	{
 		response.success = true;
+		response.data =  info.id.toStdString();//注册成功,返回产生的ID
 	}
 
 	string data = Package::to_data(response);
