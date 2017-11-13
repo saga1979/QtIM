@@ -76,6 +76,15 @@
     <ClCompile Include="process_factory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="register_server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_register_server.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_register_server.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="QtNetworkServer.h">
@@ -92,6 +101,9 @@
     </CustomBuild>
     <CustomBuild Include="userinfoshower.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="register_server.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

@@ -103,7 +103,7 @@ void QtNetworkClient::OnUserRegister()
 		m_socket = new QTcpSocket;
 		QObject::connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(OnSocketError(QAbstractSocket::SocketError)));
 		QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(OnDataReadyRead()));
-		m_socket->connectToHost("127.0.0.1", 8001);//这个是系统默认的配置,以后应该写在程序的配置文件中
+		m_socket->connectToHost("127.0.0.1", 8002);//这个是系统默认的配置,以后应该写在程序的配置文件中
 	}
 
 	m_socket->write(data.data(), data.length());

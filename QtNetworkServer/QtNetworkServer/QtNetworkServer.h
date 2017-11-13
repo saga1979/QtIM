@@ -3,6 +3,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtSql>
 #include "ui_QtNetworkServer.h"
+#include "register_server.h"
 
 #include <list>
 #include <map>
@@ -38,7 +39,8 @@ private slots:
 
 private:
 	Ui::QtNetworkServerClass ui;
-	QTcpServer* m_tcpServer;
+	QTcpServer* m_comServer;
+	RegisterServer* m_registerServer;
 	std::list<QTcpSocket*> m_clients;
 	std::list<OnlineUserInfo*> m_onlineUsers;
 	std::map<QTcpSocket*, std::string*> m_clientBuffs;

@@ -15,7 +15,10 @@
 using namespace std;
 
 QtNetworkServer::QtNetworkServer(QWidget *parent)
-	: QMainWindow(parent), m_tcpServer(0), m_twUserInfoShower(0)
+	: QMainWindow(parent)
+	, m_comServer(0)
+	, m_twUserInfoShower(0)
+	, m_registerServer(0)
 {
 	ui.setupUi(this);
 	//²¼¾Ö
@@ -45,14 +48,14 @@ QtNetworkServer::QtNetworkServer(QWidget *parent)
 
 void QtNetworkServer::OnStartClick()
 {
-	if (m_tcpServer == 0)
+	if (m_comServer == 0)
 	{
-		m_tcpServer = new QTcpServer(this);
-		QObject::connect(m_tcpServer, SIGNAL(newConnection()), this, SLOT(OnNewConnection()));
+		m_comServer = new QTcpServer(this);
+		QObject::connect(m_comServer, SIGNAL(newConnection()), this, SLOT(OnNewConnection()));
 		
 	}	
 
-	if (!m_tcpServer->listen(QHostAddress::Any, 8001))
+	if (!m_comServer->listen(QHostAddress::Any, 8001))
 	{
 		return;
 	}
@@ -61,6 +64,15 @@ void QtNetworkServer::OnStartClick()
 
 	ui.m_btStart->setText("started");
 	ui.m_btStart->setDisabled(true);
+
+
+
+	if (m_registerServer == 0)
+	{
+		m_registerServer = new RegisterServer;
+	}
+
+	m_registerServer->start();
 }
 
 QtNetworkServer::~QtNetworkServer()
@@ -79,11 +91,16 @@ QtNetworkServer::~QtNetworkServer()
 	{
 		delete  (*it).second;
 	}	
+
+	if (m_registerServer != 0)
+	{
+		delete m_registerServer;
+	}
 }
 
 void QtNetworkServer::OnNewConnection()
 {
-	QTcpSocket* client = m_tcpServer->nextPendingConnection();
+	QTcpSocket* client = m_comServer->nextPendingConnection();
 
 	if (client == 0)
 	{
