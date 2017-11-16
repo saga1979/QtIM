@@ -47,6 +47,11 @@ const string Package::to_data(const Command& cmd)
 
 }
 
+const string Package::to_data(const Command *cmd)
+{
+	return to_data(*cmd);
+}
+
 int Package::data_len() const
 {
 	assert(command != 0);

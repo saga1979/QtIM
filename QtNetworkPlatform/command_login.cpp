@@ -11,7 +11,7 @@ const string CommandLogin::to_data() const
 	data += "</type>";
 
 	data += "<name>";
-	data += this->name;
+	data += this->id;
 	data += "</name>";
 
 	data += "<pwd>";
@@ -23,7 +23,7 @@ const string CommandLogin::to_data() const
 
 int CommandLogin::from_data(const string &data)
 {
-	name = get_value(data, "name");
+	id = get_value(data, "name");
 	pwd = get_value(data, "pwd");
 
 	return 0;
@@ -42,7 +42,7 @@ int CommandLogin::length() const
 	len += strlen("<name>") * 2 + 1;
 	//ÄÚÈÝ
 	len += sizeof(EnumType);
-	len += name.length();
+	len += id.length();
 	len += pwd.length();
 	return len;
 }

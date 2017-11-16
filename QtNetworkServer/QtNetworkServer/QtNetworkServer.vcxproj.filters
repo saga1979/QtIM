@@ -85,6 +85,21 @@
     <ClCompile Include="GeneratedFiles\Release\moc_register_server.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="client_info.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client_info_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_client_info_manager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_client_info_manager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="process_message.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="QtNetworkServer.h">
@@ -103,6 +118,9 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="register_server.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="client_info_manager.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -126,6 +144,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="process_factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="process_message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="client_info.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

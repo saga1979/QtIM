@@ -77,7 +77,7 @@ void QtNetworkServer::OnStartClick()
 
 QtNetworkServer::~QtNetworkServer()
 {
-	for (list<OnlineUserInfo*>::iterator it = m_onlineUsers.begin(); it != m_onlineUsers.end(); it++)
+	for (list<ClientInfo*>::iterator it = m_onlineUsers.begin(); it != m_onlineUsers.end(); it++)
 	{
 		delete *it;
 	}
@@ -108,6 +108,7 @@ void QtNetworkServer::OnNewConnection()
 	}
 
 	QObject::connect(client, SIGNAL(readyRead()), this, SLOT(OnClientReadyRead()));
+	QObject::connect(client, SIGNAL(disconnected()), this, SLOT(OnClientDisconnected()));
 
 	ui.m_btSend->setEnabled(true);
 
@@ -170,8 +171,8 @@ void QtNetworkServer::OnClientReadyRead()
 
 		assert(pi);
 
-		bool success = pi->ProcessCommand(package.getCmd(), socket);
-
+		bool success = pi->ProcessCommand(package.getCmd(), socket, &m_clientInfoManager);
+	
 		delete pi;
 
 		if (package.getCmd()->type() == CT_LOGIN && !success)
@@ -227,4 +228,9 @@ void QtNetworkServer::OnUserManagerClick()
 void QtNetworkServer::OnCloseUserShowTab(int index)
 {
 	m_twUserInfoShower->removeTab(index);
+}
+
+void QtNetworkServer::OnClientDisconnected()
+{
+	//todo...
 }

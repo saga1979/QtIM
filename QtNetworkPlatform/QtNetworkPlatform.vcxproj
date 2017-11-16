@@ -70,6 +70,8 @@
   <ItemGroup>
     <ClCompile Include="command_factory.cpp" />
     <ClCompile Include="command_login.cpp" />
+    <ClCompile Include="command_login_response.cpp" />
+    <ClCompile Include="command_message.cpp" />
     <ClCompile Include="command_register.cpp" />
     <ClCompile Include="command_register_response.cpp" />
     <ClCompile Include="command_utilies.cpp" />
@@ -81,6 +83,8 @@
     <ClInclude Include="command_factory.h" />
     <ClInclude Include="command_interface.h" />
     <ClInclude Include="command_login.h" />
+    <ClInclude Include="command_login_response.h" />
+    <ClInclude Include="command_message.h" />
     <ClInclude Include="command_register.h" />
     <ClInclude Include="command_register_response.h" />
     <ClInclude Include="command_type.h" />

@@ -1,12 +1,17 @@
-#include "command_general_response.h"
+#include "command_login_response.h"
 #include "command_utilies.h"
 
 
-GeneralResponse::GeneralResponse() :success(false)
+CommandLoginResponse::CommandLoginResponse()
 {
 }
 
-const string GeneralResponse::to_data() const
+
+CommandLoginResponse::~CommandLoginResponse()
+{
+}
+
+const string CommandLoginResponse::to_data() const
 {
 	string data;
 
@@ -15,12 +20,8 @@ const string GeneralResponse::to_data() const
 	data.append((const char*)&tmp, sizeof(EnumType));
 	data += "</type>";
 
-	data += "<cmd>";
-	data.append((const char*)&request, sizeof(EnumType));;
-	data += "</cmd>";
-
 	data += "<success>";
-	data += success?"1":"0";
+	data += success ? "1" : "0";
 	data += "</success>";
 
 	data += "<msg>";
@@ -31,33 +32,28 @@ const string GeneralResponse::to_data() const
 	return data;
 }
 
-int GeneralResponse::from_data(const string &buff)
+int CommandLoginResponse::from_data(const string &buff)
 {
 	string str = get_value(buff, "success");
 
 	success = (str == "0" ? false : true);
 
-	str = get_value(buff, "cmd");
-
-	request = (CommandType) (*(EnumType*)(str.data()));
-
 	msg = get_value(buff, "msg");
 	return 0;
 }
 
-CommandType GeneralResponse::type() const
+CommandType CommandLoginResponse::type() const
 {
-	return CT_GENERAL_RESPONSE;
+	return CT_LOGIN_RESPONSE;
 }
 
-int GeneralResponse::length() const
+int CommandLoginResponse::length() const
 {
 	int len = strlen("<type>") * 2 + 1;
 	len += strlen("<msg>") * 2 + 1;
 	len += strlen("<success>") * 2 + 1;
-	len += strlen("<cmd>") * 2 + 1;
 	//ÄÚÈÝ
-	len += ( sizeof(EnumType)*2);
+	len += sizeof(EnumType);
 	len += msg.length();
 	len += 1;//bool "0" or "1"
 	return len;

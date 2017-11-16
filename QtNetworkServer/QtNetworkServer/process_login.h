@@ -7,6 +7,6 @@ public:
 	~ProcessLogin();
 
 	// Inherited via ProcessInterface
-	virtual bool ProcessCommand(const Command *, QIODevice *) override;
+	virtual bool ProcessCommand(const Command *, QAbstractSocket *, ClientInfoManager* = 0) override;
 };
 

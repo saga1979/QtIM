@@ -12,7 +12,7 @@ ProcessRegister::~ProcessRegister()
 {
 }
 
-bool ProcessRegister::ProcessCommand(const Command *command, QIODevice *io)
+bool ProcessRegister::ProcessCommand(const Command *command, QAbstractSocket *io, ClientInfoManager*)
 {
 	CommandRegister* cmd = (CommandRegister*)command;
 

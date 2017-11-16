@@ -101,7 +101,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>zf</string>
+    <string>2479</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="m_lePwd">
@@ -114,7 +114,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>1234556</string>
+    <string>111</string>
    </property>
    <property name="echoMode">
     <enum>QLineEdit::PasswordEchoOnEdit</enum>

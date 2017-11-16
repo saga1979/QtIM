@@ -18,11 +18,17 @@ public:
 	QtNetworkClient(QWidget *parent = Q_NULLPTR);
 
 private slots:
-
+	//注册处理
 	void OnSocketError(QAbstractSocket::SocketError);
 	void OnDataReadyRead();
 	void OnUserRegister();
-	void OnLoginResponse(QTcpSocket*);
+	void OnLoginRequest(const LoginInfo&);
+	//发送消息
+	void OnSendMessage();
+	//通信连接处理
+	void OnCommSocketError(QAbstractSocket::SocketError);
+	void OnCommDataReadyRead();
+	void OnCommConnected();
 
 private:
 	Ui::QtNetworkClientClass ui;
@@ -31,4 +37,7 @@ private:
 	UserLogin *m_userLogin;
 	std::string m_socketBuff;
 	CommandType m_lastCommand;
+	QAbstractSocket* m_commSocket;
+	std::string m_commBuff;
+	LoginInfo m_loginInfo;
 };

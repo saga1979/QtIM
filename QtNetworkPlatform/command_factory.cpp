@@ -37,6 +37,21 @@ Command * CommandFactory::getCommand(CommandType type)
 		command = new CommandLogin;
 	}
 	break;
+	case CT_LOGIN_RESPONSE:
+	{
+		command = new CommandLoginResponse;
+	}
+	break;
+	case CT_MESSAGE:
+	{
+		command = new CommandMessage;
+	}
+	break;
+	case CT_GENERAL_RESPONSE:
+	{
+		command = new GeneralResponse;
+	}
+	break;
 	default:
 		break;
 	}

@@ -5,7 +5,7 @@
 struct QTNETWORKPLATFORM_EXPORT GeneralResponse : public Command
 {
 	GeneralResponse();
-	CommandType command_request;
+	CommandType request;
 	bool success;
 	string msg;
 	// Inherited via Command

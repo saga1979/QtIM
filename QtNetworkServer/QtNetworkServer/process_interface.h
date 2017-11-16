@@ -1,11 +1,12 @@
 #pragma once
 
-#include <QIODevice>
+#include <QAbstractSocket>
+#include "client_info_manager.h"
 class Command;
 
 class ProcessInterface
 {
 public:
-	virtual bool ProcessCommand(const Command*, QIODevice*) = 0;
+	virtual bool ProcessCommand(const Command*, QAbstractSocket*, ClientInfoManager* = 0) = 0;
 	virtual ~ProcessInterface() {};
 };

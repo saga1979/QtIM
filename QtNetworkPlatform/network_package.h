@@ -19,6 +19,7 @@ struct QTNETWORKPLATFORM_EXPORT Package : public ISerializable
 	virtual int  from_data(const string &) override;
 
 	static const string to_data(const Command&);
+	static const string to_data(const Command*);
 
 private:
 	Command *command;

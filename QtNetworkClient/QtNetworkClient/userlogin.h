@@ -2,7 +2,18 @@
 
 #include <QDialog>
 #include <QTcpSocket>
+#include <string>
 #include "ui_userlogin.h"
+
+using std::string;
+
+struct LoginInfo 
+{
+	QString id;
+	QString pwd;
+	QString server;
+	int port;
+};
 
 class UserLogin : public QDialog
 {
@@ -12,13 +23,11 @@ public:
 	UserLogin(QWidget *parent = Q_NULLPTR);
 	~UserLogin();
 Q_SIGNALS:
-	void LoginResponse(QTcpSocket*);
+	void LoginRequest(const LoginInfo&);
 private slots:
 	void OnLogin();
-	void OnConnected();
-	void OnDataReadyRead();
-	void OnSocketError();
 private:
 	Ui::UserLogin ui;
 	QTcpSocket* m_socket;
+	string m_buff;
 };

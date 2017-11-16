@@ -1,6 +1,7 @@
 #include "process_factory.h"
 #include "process_register.h"
 #include "process_login.h"
+#include "process_message.h"
 
 
 CmdProcessFactory::CmdProcessFactory()
@@ -31,6 +32,11 @@ ProcessInterface *CmdProcessFactory::getProcess(CommandType type)
 	case CT_LOGIN:
 	{
 		cmd = new ProcessLogin;
+	}
+	break;
+	case CT_MESSAGE:
+	{
+		cmd = new ProcessMessage;
 	}
 	break;
 	default:
