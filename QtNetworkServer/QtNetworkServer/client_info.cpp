@@ -9,6 +9,8 @@ ClientInfo::ClientInfo():m_socket(0)
 
 ClientInfo::~ClientInfo()
 {
+	if (m_socket != 0)
+		delete m_socket;
 }
 
 QString ClientInfo::id() const

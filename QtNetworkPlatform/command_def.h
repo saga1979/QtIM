@@ -15,6 +15,7 @@
 #include "command_register_response.h"
 #include "command_general_response.h"
 #include "command_message.h"
+#include "command_user_status.h"
 
 
 

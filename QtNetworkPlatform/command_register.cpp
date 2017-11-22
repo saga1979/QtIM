@@ -6,14 +6,9 @@ CommandType CommandRegister::type() const
 {
 	return CT_REGISTER;
 }
-const string  CommandRegister::to_data() const
+const string  CommandRegister::to_internal_data() const
 {
 	string data;
-
-	data += "<type>";
-	uint32_t tmp = type();
-	data.append((const char*)&tmp, sizeof(EnumType));
-	data += "</type>";
 
 	data += "<name>";
 	data += this->name;
@@ -43,13 +38,13 @@ int CommandRegister::from_data(const string &data)
 	return 0;
 }
 
-int  CommandRegister::length() const
+int  CommandRegister::internal_length() const
 {
-	int len = strlen("<type>") * 2 + 1;
+	int len = strlen("<name>") * 2 + 1;
 	len += strlen("<pwd>") * 2 + 1;
 	len += strlen("<info>") * 2 + 1;
 	len += strlen("<img>") * 2 + 1;
-	len += sizeof(EnumType);
+
 
 	len += name.length();
 	len += pwd.length();

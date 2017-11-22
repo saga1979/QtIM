@@ -69,11 +69,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="command_factory.cpp" />
+    <ClCompile Include="command_interface.cpp" />
     <ClCompile Include="command_login.cpp" />
     <ClCompile Include="command_login_response.cpp" />
     <ClCompile Include="command_message.cpp" />
     <ClCompile Include="command_register.cpp" />
     <ClCompile Include="command_register_response.cpp" />
+    <ClCompile Include="command_user_status.cpp" />
     <ClCompile Include="command_utilies.cpp" />
     <ClCompile Include="command_general_response.cpp" />
     <ClCompile Include="network_package.cpp" />
@@ -88,6 +90,7 @@
     <ClInclude Include="command_register.h" />
     <ClInclude Include="command_register_response.h" />
     <ClInclude Include="command_type.h" />
+    <ClInclude Include="command_user_status.h" />
     <ClInclude Include="command_utilies.h" />
     <ClInclude Include="command_general_response.h" />
     <ClInclude Include="network_package.h" />

@@ -19,7 +19,7 @@ bool ProcessMessage::ProcessCommand(const Command *cmd, QAbstractSocket *io, Cli
 
 	for (QList<ClientInfo*>::iterator it = clients->begin(); it != clients->end(); it++)
 	{
-		io->write(data.data(), data.length());
+		(*it)->socket()->write(data.data(), data.length());
 	}
 
 	return true;

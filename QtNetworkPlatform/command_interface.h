@@ -15,12 +15,20 @@ struct ISerializable
 	virtual int from_data(const string&) = 0;
 };
 
-struct Command : public ISerializable
+struct QTNETWORKPLATFORM_EXPORT Command : public ISerializable
 {
 	virtual  CommandType type() const = 0;
 
-	virtual  int  length() const = 0;
+	virtual  int  length() const;
 
 	virtual ~Command() {}
+
+
+	// Inherited via ISerializable
+	virtual const string to_data() const override;
+
+protected:
+	virtual const string to_internal_data() const = 0;
+	virtual  int  internal_length() const = 0;
 
 };

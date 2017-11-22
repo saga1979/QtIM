@@ -52,6 +52,11 @@ Command * CommandFactory::getCommand(CommandType type)
 		command = new GeneralResponse;
 	}
 	break;
+	case CT_USER_STATUS:
+	{
+		command = new CommandUserStatus;
+	}
+	break;
 	default:
 		break;
 	}

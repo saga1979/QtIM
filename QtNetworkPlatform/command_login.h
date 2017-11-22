@@ -5,18 +5,14 @@
 struct QTNETWORKPLATFORM_EXPORT CommandLogin : public Command
 {
 	string id;
-	string pwd;
-
-
-	// Inherited via Command
-	virtual const string to_data() const override;
+	string pwd;	
 
 	virtual int from_data(const string &) override;
-
 	virtual CommandType type() const override;
-
-	virtual int length() const override;
-
+protected:
+	// Inherited via Command
+	virtual const string to_internal_data() const override;
+	virtual int internal_length() const override;
 };
 
 

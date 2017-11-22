@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="QListWidget" name="listWidget">
+     <widget class="QListWidget" name="m_lwUsers">
       <property name="maximumSize">
        <size>
         <width>100</width>

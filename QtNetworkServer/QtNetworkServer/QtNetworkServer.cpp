@@ -77,11 +77,6 @@ void QtNetworkServer::OnStartClick()
 
 QtNetworkServer::~QtNetworkServer()
 {
-	for (list<ClientInfo*>::iterator it = m_onlineUsers.begin(); it != m_onlineUsers.end(); it++)
-	{
-		delete *it;
-	}
-
 	for (list<QTcpSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
 	{
 		delete *it;

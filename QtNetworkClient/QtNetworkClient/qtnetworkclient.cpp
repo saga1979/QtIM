@@ -111,6 +111,7 @@ void QtNetworkClient::OnDataReadyRead()
 
 	}
 	break;
+	
 	default:
 		break;
 	}
@@ -160,7 +161,7 @@ void QtNetworkClient::OnLoginRequest(const LoginInfo& info)
 void QtNetworkClient::OnSendMessage()
 {
 	CommandMessage msg;
-	msg.from = "test";//todo...
+	msg.from = m_loginInfo.id.toStdString();//todo...
 	msg.to = "*";
 	msg.msg = ui.m_teMsg->toPlainText().toStdString();
 
@@ -203,11 +204,7 @@ void QtNetworkClient::OnCommDataReadyRead()
 			break;
 		}
 
-		QString msg;
-
-		msg = QString::fromStdString(cmd->msg);//todo..
-
-		ui.m_lwMessages->addItem(msg);
+		ui.m_lwMessages->addItem(QString("From:%1 %2").arg(cmd->from.c_str()).arg(cmd->msg.c_str()));
 
 	}
 	break;
@@ -229,6 +226,28 @@ void QtNetworkClient::OnCommDataReadyRead()
 			QMessageBox::critical(this, "failed", QString::fromStdString(cmd->msg));
 		}
 	}
+	case CT_USER_STATUS:
+	{
+		CommandUserStatus *cmd = (CommandUserStatus*)(package.getCmd());
+		assert(cmd != 0);
+		if (cmd == 0)
+		{
+			break;
+		}
+
+		list<UserStatus> users;
+		cmd->data(users);
+
+		ui.m_lwUsers->clear();
+
+		for (list<UserStatus>::const_iterator it = users.cbegin(); it != users.end(); it++)
+		{
+			ui.m_lwUsers->addItem(QString::fromStdString(it->id));
+		}
+
+
+	}
+	break;
 	break;
 	default:
 		break;

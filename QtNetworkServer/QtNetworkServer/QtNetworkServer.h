@@ -38,7 +38,6 @@ private:
 	QTcpServer* m_comServer;
 	RegisterServer* m_registerServer;
 	std::list<QTcpSocket*> m_clients;
-	std::list<ClientInfo*> m_onlineUsers;
 	std::map<QTcpSocket*, std::string*> m_clientBuffs;
 	QTabWidget* m_twUserInfoShower;
 	ClientInfoManager m_clientInfoManager;

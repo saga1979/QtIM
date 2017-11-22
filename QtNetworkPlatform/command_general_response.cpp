@@ -6,14 +6,9 @@ GeneralResponse::GeneralResponse() :success(false)
 {
 }
 
-const string GeneralResponse::to_data() const
+const string GeneralResponse::to_internal_data() const
 {
-	string data;
-
-	data += "<type>";
-	uint32_t tmp = type();
-	data.append((const char*)&tmp, sizeof(EnumType));
-	data += "</type>";
+	string data;	
 
 	data += "<cmd>";
 	data.append((const char*)&request, sizeof(EnumType));;
@@ -26,7 +21,6 @@ const string GeneralResponse::to_data() const
 	data += "<msg>";
 	data += msg;
 	data += "</msg>";
-
 
 	return data;
 }
@@ -50,14 +44,13 @@ CommandType GeneralResponse::type() const
 	return CT_GENERAL_RESPONSE;
 }
 
-int GeneralResponse::length() const
+int GeneralResponse::internal_length() const
 {
-	int len = strlen("<type>") * 2 + 1;
-	len += strlen("<msg>") * 2 + 1;
+	int len = strlen("<msg>") * 2 + 1;
 	len += strlen("<success>") * 2 + 1;
 	len += strlen("<cmd>") * 2 + 1;
 	//ÄÚÈÝ
-	len += ( sizeof(EnumType)*2);
+	len += sizeof(EnumType);
 	len += msg.length();
 	len += 1;//bool "0" or "1"
 	return len;

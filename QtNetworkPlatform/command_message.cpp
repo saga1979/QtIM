@@ -9,14 +9,9 @@
 
 
 
-const string CommandMessage::to_data() const
+const string CommandMessage::to_internal_data() const
 {
 	string data;
-
-	data += "<type>";
-	uint32_t tmp = type();
-	data.append((const char*)&tmp, sizeof(EnumType));
-	data += "</type>";
 
 	data += "<from>";
 	data += from;
@@ -46,12 +41,11 @@ CommandType CommandMessage::type() const
 	return CT_MESSAGE;
 }
 
-int CommandMessage::length() const
+int CommandMessage::internal_length() const
 {
 	int len = strlen("<from>") * 2 + 1;
 	len += strlen("<to>") * 2 + 1;
 	len += strlen("<msg>") * 2 + 1;
-	len += sizeof(EnumType);
 
 	len += from.length();
 	len += to.length();
