@@ -6,7 +6,7 @@ CommandType CommandRegister::type() const
 {
 	return CT_REGISTER;
 }
-const string  CommandRegister::to_internal_data() const
+const string  CommandRegister::internal_to_data() const
 {
 	string data;
 

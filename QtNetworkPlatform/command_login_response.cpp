@@ -2,7 +2,7 @@
 #include "command_utilies.h"
 
 
-const string CommandLoginResponse::to_internal_data() const
+const string CommandLoginResponse::internal_to_data() const
 {
 	string data;
 

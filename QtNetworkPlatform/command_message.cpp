@@ -9,7 +9,7 @@
 
 
 
-const string CommandMessage::to_internal_data() const
+const string CommandMessage::internal_to_data() const
 {
 	string data;
 

@@ -150,32 +150,36 @@ void QtNetworkServer::OnClientReadyRead()
 
 		buf->append(bytes.toStdString());
 
-		Package package;
-
-		int index = package.from_data(*buf);
-
-		if (index <= 0)
+		while (1)
 		{
-			continue;
-		}
 
-		buf->erase(0, index);//清理已经读取的数据
+			Package package;
+
+			int index = package.from_data(*buf);
+
+			if (index <= 0)
+			{
+				break;
+			}
+
+			buf->erase(0, index);//清理已经读取的数据
 
 
-		ProcessInterface* pi = CmdProcessFactory::instance().getProcess(package.getCmd()->type());
+			ProcessInterface* pi = CmdProcessFactory::instance().getProcess(package.getCmd()->type());
 
-		assert(pi);
+			assert(pi);
 
-		bool success = pi->ProcessCommand(package.getCmd(), socket, &m_clientInfoManager);
-	
-		delete pi;
+			bool success = pi->ProcessCommand(package.getCmd(), socket, &m_clientInfoManager);
 
-		if (package.getCmd()->type() == CT_LOGIN && !success)
-		{
-			//如果不合法,关闭连接
-			m_clientBuffs.erase(socket);//删除该socket连接的Buff
-			delete socket;//关闭连接
-			it = m_clients.erase(it);//从连接列表中删除该连接
+			delete pi;
+
+			if (package.getCmd()->type() == CT_LOGIN && !success)
+			{
+				//如果不合法,关闭连接
+				m_clientBuffs.erase(socket);//删除该socket连接的Buff
+				delete socket;//关闭连接
+				it = m_clients.erase(it);//从连接列表中删除该连接
+			}
 		}
 
 	}

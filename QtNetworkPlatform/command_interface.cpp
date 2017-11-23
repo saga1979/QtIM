@@ -17,7 +17,7 @@ const string Command::to_data() const
 	data.append((const char*)&tmp, sizeof(EnumType));
 	data += "</type>";
 
-	data += to_internal_data();
+	data += internal_to_data();
 
 	return data;
 }

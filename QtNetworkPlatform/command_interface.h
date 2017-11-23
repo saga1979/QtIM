@@ -28,7 +28,7 @@ struct QTNETWORKPLATFORM_EXPORT Command : public ISerializable
 	virtual const string to_data() const override;
 
 protected:
-	virtual const string to_internal_data() const = 0;
+	virtual const string internal_to_data() const = 0;
 	virtual  int  internal_length() const = 0;
 
 };

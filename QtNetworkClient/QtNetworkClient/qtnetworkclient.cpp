@@ -53,7 +53,7 @@ void QtNetworkClient::OnSocketError(QAbstractSocket::SocketError error)
 
 }
 
-void QtNetworkClient::OnDataReadyRead()
+void QtNetworkClient::OnRegisterDataReadyRead()
 {
 	QByteArray data =  m_socket->readAll();
 
@@ -93,24 +93,7 @@ void QtNetworkClient::OnDataReadyRead()
 		}
 
 	}
-	break;
-	case CT_MESSAGE:
-	{
-		CommandMessage* cmd = (CommandMessage*)(package.getCmd());
-
-		if (cmd == 0)
-		{
-			break;
-		}
-
-		QString msg;
-
-		msg = QString::fromStdString(cmd->msg);//todo..
-
-		ui.m_lwMessages->addItem(msg);
-
-	}
-	break;
+	break;	
 	
 	default:
 		break;
@@ -131,7 +114,7 @@ void QtNetworkClient::OnUserRegister()
 	{
 		m_socket = new QTcpSocket;
 		QObject::connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(OnSocketError(QAbstractSocket::SocketError)));
-		QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(OnDataReadyRead()));
+		QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(OnRegisterDataReadyRead()));
 		m_socket->connectToHost("127.0.0.1", 8002);//这个是系统默认的配置,以后应该写在程序的配置文件中
 	}
 
@@ -178,80 +161,87 @@ void QtNetworkClient::OnCommDataReadyRead()
 {
 	QByteArray data = m_commSocket->readAll();
 
-	m_commBuff.append(data.toStdString());
+	m_commBuff.append(data.toStdString());	
 
-	Package package;
-
-	int index = package.from_data(m_commBuff);
-
-	if (index <= 0)
+	while (1)
 	{
-		return;
-	}
-
-	m_commBuff.erase(0, index);//把已经解析的数据从缓冲区清除
-
-
-	switch (package.getCmd()->type())
-	{
-	
-	case CT_MESSAGE:
-	{
-		CommandMessage* cmd = (CommandMessage*)(package.getCmd());
-
-		if (cmd == 0)
+		Package package;
+		//循环解析
+		int index = package.from_data(m_commBuff);
+		if (index <= 0)
 		{
-			break;
+			return;
 		}
 
-		ui.m_lwMessages->addItem(QString("From:%1 %2").arg(cmd->from.c_str()).arg(cmd->msg.c_str()));
+		m_commBuff.erase(0, index);//把已经解析的数据从缓冲区清除
 
-	}
-	break;
-	case CT_LOGIN_RESPONSE:
-	{
-		CommandLoginResponse* cmd = (CommandLoginResponse*)(package.getCmd());
-		if (cmd == 0)
+		switch (package.getCmd()->type())
 		{
-			break;
-		}
 
-		if (cmd->success)
+		case CT_MESSAGE:
 		{
-			m_userLogin->close();
-			ui.m_pbSend->setEnabled(true);
+			CommandMessage* cmd = (CommandMessage*)(package.getCmd());
+
+			if (cmd == 0)
+			{
+				break;
+			}
+
+			ui.m_lwMessages->addItem(QString("From:%1 %2").arg(cmd->from.c_str()).arg(cmd->msg.c_str()));
+
 		}
-		else
-		{
-			QMessageBox::critical(this, "failed", QString::fromStdString(cmd->msg));
-		}
-	}
-	case CT_USER_STATUS:
-	{
-		CommandUserStatus *cmd = (CommandUserStatus*)(package.getCmd());
-		assert(cmd != 0);
-		if (cmd == 0)
-		{
-			break;
-		}
-
-		list<UserStatus> users;
-		cmd->data(users);
-
-		ui.m_lwUsers->clear();
-
-		for (list<UserStatus>::const_iterator it = users.cbegin(); it != users.end(); it++)
-		{
-			ui.m_lwUsers->addItem(QString::fromStdString(it->id));
-		}
-
-
-	}
-	break;
-	break;
-	default:
 		break;
+		case CT_LOGIN_RESPONSE:
+		{
+			CommandLoginResponse* cmd = (CommandLoginResponse*)(package.getCmd());
+			if (cmd == 0)
+			{
+				break;
+			}
+
+			if (cmd->success)
+			{
+				m_userLogin->close();
+				ui.m_pbSend->setEnabled(true);
+			}
+			else
+			{
+				QMessageBox::critical(this, "failed", QString::fromStdString(cmd->msg));
+			}
+		}
+		break;
+		case CT_USER_STATUS:
+		{
+			CommandUserStatus *cmd = (CommandUserStatus*)(package.getCmd());
+			assert(cmd != 0);
+			if (cmd == 0)
+			{
+				break;
+			}
+
+			list<UserStatus> users;
+			cmd->data(users);
+
+			ui.m_lwUsers->clear();
+
+			for (list<UserStatus>::const_iterator it = users.cbegin(); it != users.end(); it++)
+			{
+				QListWidgetItem* item = new QListWidgetItem(ui.m_lwUsers);
+				item->setText(QString::fromStdString(it->id));
+
+				QString resource = it->online ? ":/menu/resources/user_online.png" :
+					":/menu/resources/user_offline.png";
+				item->setIcon(QIcon(resource));
+
+			}
+		}
+		break;
+		default:
+			break;
+		}
 	}
+
+	
 	
 }
 

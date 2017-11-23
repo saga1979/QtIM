@@ -3,5 +3,7 @@
         <file>resources/user_login.png</file>
         <file>resources/user_register.png</file>
         <file>resources/default_user_image.png</file>
+        <file>resources/user_online.png</file>
+        <file>resources/user_offline.png</file>
     </qresource>
 </RCC>

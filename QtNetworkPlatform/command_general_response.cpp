@@ -6,7 +6,7 @@ GeneralResponse::GeneralResponse() :success(false)
 {
 }
 
-const string GeneralResponse::to_internal_data() const
+const string GeneralResponse::internal_to_data() const
 {
 	string data;	
 

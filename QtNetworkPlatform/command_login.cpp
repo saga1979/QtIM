@@ -1,7 +1,7 @@
 #include "command_login.h"
 #include "command_utilies.h"
 
-const string CommandLogin::to_internal_data() const
+const string CommandLogin::internal_to_data() const
 {
 	string data;
 

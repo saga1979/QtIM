@@ -11,7 +11,7 @@ public:
 	virtual CommandType type() const override;
 protected:
 	// Inherited via Command
-	virtual const string to_internal_data() const override;
+	virtual const string internal_to_data() const override;
 	virtual int internal_length() const override;
 };
 

@@ -20,60 +20,59 @@ void CommandUserStatus::remove(const string &id)
 
 void CommandUserStatus::data(list<UserStatus>& status)
 {
-	status = m_userStatus;
+	status = m_userStatus;	
+}
+bool CommandUserStatus::userExist(const string & id)
+{
+	for (list<UserStatus>::const_iterator it = m_userStatus.cbegin(); it != m_userStatus.cend(); it++)
+	{
+		if (it->id == id)
+			return true;
+	}
+	return false;
 }
 /*
-* <users>xxx;xx;xxx;</users><onlines>0;1;1;</onlines>
+* <status>0xxx;1xxx;</status> //可选
 *
 */
-const string CommandUserStatus::to_internal_data() const
+const string CommandUserStatus::internal_to_data() const
 {
 	string users;
-	string onlines;
 
 	for (list<UserStatus>::const_iterator it = m_userStatus.cbegin(); it != m_userStatus.cend(); it++)
 	{
+		users += it->online ? "1" : "0";
 		users += it->id;
 		users += ";";
-
-		onlines += it->online ? "1" : "0";
-		onlines += ";";
 	}
 
-	string data = "<users>";
+	string data = "<status>";
 	data += users;
-	data += "</users>";
-
-	data += "<onlines>";
-	data += onlines;
-	data += "</onlines>";
+	data += "</status>";
 
 	return data;
 }
 
 int CommandUserStatus::from_data(const string &data)
 {
-	string users = get_value(data, "users");
-	string onlines = get_value(data, "onlines");
-
+	string strData = get_value(data, "status");
 	
 	int start_index = 0;
 	size_t find_index = string::npos;
 
 	UserStatus status;
-	while ((find_index = users.find(";", start_index)) != string::npos)
+	while ((find_index = strData.find(";", start_index)) != string::npos)
 	{
-		status.id = users.substr(start_index, find_index - start_index);
+		status.online = strData[start_index] == '1' ? true : false;
+		status.id = strData.substr(start_index+1, find_index - start_index-1);
 		m_userStatus.push_back(status);
 
 		start_index = find_index + 1;
-		if (start_index >= users.length())
+		if (start_index >= strData.length() )
 		{
 			break;
 		}
 	}
-
-	//todo... online status
 	
 	return 0;
 }
@@ -85,17 +84,12 @@ CommandType CommandUserStatus::type() const
 
 int CommandUserStatus::internal_length() const
 {
-	int len = strlen("<users>") * 2 + 1;
-	len += strlen("<onlines") * 2 + 1;
-
+	int len = strlen("<status>") * 2 + 1;
 
 	for (list<UserStatus>::const_iterator it = m_userStatus.cbegin(); it != m_userStatus.cend(); it++)
 	{
 		len += it->id.length();//name
-		len += 1;//";"
-
-		len += 1;//"0" or "1"
-		len += 1;//";"
+		len += 2;//前面有"0"或者"1",后面有";"
 	}
 	return len;
 }

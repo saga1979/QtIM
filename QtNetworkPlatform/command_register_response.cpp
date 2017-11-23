@@ -9,7 +9,7 @@ CommandRegisterResponse::CommandRegisterResponse() :success(false)
 
 }
 //<type>xxx</type><success>1</success>
-const string CommandRegisterResponse::to_internal_data() const
+const string CommandRegisterResponse::internal_to_data() const
 {
 	string format_data;
 

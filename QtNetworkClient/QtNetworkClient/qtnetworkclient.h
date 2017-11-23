@@ -20,12 +20,13 @@ public:
 private slots:
 	//注册处理
 	void OnSocketError(QAbstractSocket::SocketError);
-	void OnDataReadyRead();
+	void OnRegisterDataReadyRead();
 	void OnUserRegister();
-	void OnLoginRequest(const LoginInfo&);
+	
 	//发送消息
 	void OnSendMessage();
 	//通信连接处理
+	void OnLoginRequest(const LoginInfo&);
 	void OnCommSocketError(QAbstractSocket::SocketError);
 	void OnCommDataReadyRead();
 	void OnCommConnected();

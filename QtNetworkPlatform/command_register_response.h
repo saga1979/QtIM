@@ -12,7 +12,7 @@ struct QTNETWORKPLATFORM_EXPORT CommandRegisterResponse : public Command
 	virtual  CommandType type() const;
 protected:
 	// Inherited via CommandMessage
-	virtual const string  to_internal_data() const override;
+	virtual const string  internal_to_data() const override;
 	// Inherited via CommandMessage
 	virtual int  internal_length() const override;
 };
