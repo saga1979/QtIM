@@ -20,5 +20,6 @@ public:
 	QList<ClientInfo*>* getOnlineClients();
 	void add(ClientInfo*);
 	void remove(ClientInfo*);
+	bool remove(const QAbstractSocket*);
 };
 

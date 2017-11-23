@@ -6,6 +6,7 @@
 class ClientInfo
 {
 	QString m_id;
+	//所有的socket连接,都将其disconnected信号连接deleteLater槽
 	QAbstractSocket* m_socket;
 public:
 	ClientInfo();

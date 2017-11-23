@@ -77,12 +77,12 @@ void QtNetworkServer::OnStartClick()
 
 QtNetworkServer::~QtNetworkServer()
 {
-	for (list<QTcpSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
+	for (list<QAbstractSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
 	{
-		delete *it;
+		(*it)->close();
 	}
 
-	for (map<QTcpSocket*, std::string*>::iterator it = m_clientBuffs.begin(); it != m_clientBuffs.end(); it++)
+	for (map<QAbstractSocket*, std::string*>::iterator it = m_clientBuffs.begin(); it != m_clientBuffs.end(); it++)
 	{
 		delete  (*it).second;
 	}	
@@ -104,6 +104,7 @@ void QtNetworkServer::OnNewConnection()
 
 	QObject::connect(client, SIGNAL(readyRead()), this, SLOT(OnClientReadyRead()));
 	QObject::connect(client, SIGNAL(disconnected()), this, SLOT(OnClientDisconnected()));
+	QObject::connect(client, SIGNAL(disconnected()), client, SLOT(deleteLater()));
 
 	ui.m_btSend->setEnabled(true);
 
@@ -115,9 +116,9 @@ void QtNetworkServer::OnNewConnection()
 
 void QtNetworkServer::OnSendClick()
 {
-	for (std::list<QTcpSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
+	for (std::list<QAbstractSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
 	{
-		QTcpSocket* socket = *it;
+		QAbstractSocket* socket = *it;
 		//清理断开的连接及其占用的资源
 		if (socket->state() == QAbstractSocket::UnconnectedState)
 		{
@@ -135,9 +136,9 @@ void QtNetworkServer::OnSendClick()
 
 void QtNetworkServer::OnClientReadyRead()
 {
-	for (std::list<QTcpSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
+	for (std::list<QAbstractSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
 	{
-		QTcpSocket* socket = *it;
+		QAbstractSocket* socket = *it;
 
 		if (!socket->isReadable())
 		{
@@ -171,14 +172,13 @@ void QtNetworkServer::OnClientReadyRead()
 
 			bool success = pi->ProcessCommand(package.getCmd(), socket, &m_clientInfoManager);
 
-			delete pi;
+			delete pi;			
 
 			if (package.getCmd()->type() == CT_LOGIN && !success)
 			{
-				//如果不合法,关闭连接
-				m_clientBuffs.erase(socket);//删除该socket连接的Buff
-				delete socket;//关闭连接
-				it = m_clients.erase(it);//从连接列表中删除该连接
+				socket->close();
+			
+				break;
 			}
 		}
 
@@ -231,5 +231,17 @@ void QtNetworkServer::OnCloseUserShowTab(int index)
 
 void QtNetworkServer::OnClientDisconnected()
 {
-	//todo...
+	QAbstractSocket* socket = 0;
+
+	foreach(socket, m_clients)
+	{
+		if (socket->state() == QAbstractSocket::UnconnectedState)
+		{
+			delete m_clientBuffs[socket];
+			m_clients.remove(socket);
+			//该连接还没有加入在线客户端管理模块
+			m_clientInfoManager.remove(socket);
+			break;
+		}
+	}
 }

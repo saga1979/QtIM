@@ -3,7 +3,7 @@
 class QTNETWORKPLATFORM_EXPORT CommandLoginResponse :	public Command
 {
 public:
-
+	CommandLoginResponse();
 	bool success;
 	std::string msg;
 	

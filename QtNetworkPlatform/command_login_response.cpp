@@ -2,6 +2,10 @@
 #include "command_utilies.h"
 
 
+CommandLoginResponse::CommandLoginResponse():success(false)
+{
+}
+
 const string CommandLoginResponse::internal_to_data() const
 {
 	string data;

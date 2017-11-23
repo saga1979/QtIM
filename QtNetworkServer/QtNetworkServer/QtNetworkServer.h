@@ -37,8 +37,8 @@ private:
 	Ui::QtNetworkServerClass ui;
 	QTcpServer* m_comServer;
 	RegisterServer* m_registerServer;
-	std::list<QTcpSocket*> m_clients;
-	std::map<QTcpSocket*, std::string*> m_clientBuffs;
+	std::list<QAbstractSocket*> m_clients;
+	std::map<QAbstractSocket*, std::string*> m_clientBuffs;
 	QTabWidget* m_twUserInfoShower;
 	ClientInfoManager m_clientInfoManager;
 };
