@@ -5,6 +5,7 @@
 #include "ui_QtNetworkServer.h"
 #include "register_server.h"
 #include "client_info_manager.h"
+#include "socket_process.h"
 
 #include <list>
 #include <map>
@@ -13,8 +14,29 @@
 class QTcpServer;
 class QTcpSocket;
 
+using std::string;
+struct MySocketClient
+{
+	string *buff;
+	QMutex *mutex;
+	SocketProcess *process;
+	QAbstractSocket * socket;
+	QWaitCondition *con;
+	MySocketClient(QAbstractSocket* s):socket(s)
+	{
+		buff = new string;
+		mutex = new QMutex;
+		con = new QWaitCondition;
+		process = new SocketProcess(socket,buff, mutex, con);
+		process->start();
+	}
+	~MySocketClient()
+	{
+		process->requestInterruption();
+	}
+};
 
-
+using std::map;
 class QtNetworkServer : public QMainWindow
 {
 	Q_OBJECT
@@ -37,8 +59,6 @@ private:
 	Ui::QtNetworkServerClass ui;
 	QTcpServer* m_comServer;
 	RegisterServer* m_registerServer;
-	std::list<QAbstractSocket*> m_clients;
-	std::map<QAbstractSocket*, std::string*> m_clientBuffs;
+	map<QAbstractSocket*, MySocketClient*> m_clients;
 	QTabWidget* m_twUserInfoShower;
-	ClientInfoManager m_clientInfoManager;
 };

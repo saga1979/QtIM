@@ -56,7 +56,8 @@ bool ProcessLogin::ProcessCommand(const Command *command, QAbstractSocket *io, C
 	string data = Package::to_data(response);
 
 	io->write(data.data(), data.length());
-
+	io->flush();
+	
 	//如果认证成功
 
 	if (!response.success)
@@ -90,6 +91,7 @@ bool ProcessLogin::ProcessCommand(const Command *command, QAbstractSocket *io, C
 	string str = Package::to_data(userStatus);
 
 	io->write(str.data(), str.length());
+	io->flush();
 
 	//将认证成功的客户端加入客户端管理
 	ClientInfo* pinfo = new ClientInfo;

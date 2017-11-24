@@ -22,7 +22,6 @@ QList<ClientInfo*>* ClientInfoManager::getOnlineClients()
 
 void ClientInfoManager::add(ClientInfo *client)
 {
-	QObject::connect(client->socket(), SIGNAL(disconnected()), this, SLOT(onSocketDisconnected()));
 	m_clients.append(client);
 }
 
@@ -47,20 +46,12 @@ bool ClientInfoManager::remove(const QAbstractSocket *socket)
 	return false;
 }
 
-
-void ClientInfoManager::onSocketDisconnected()
+ClientInfoManager & ClientInfoManager::instance()
 {
-	//todo...
-	for (QList<ClientInfo*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
-	{
-		//ClientInfo* info = *it;
-		//if (info->socket()->state() == QAbstractSocket::UnconnectedState)
-		//{
-		//	it = m_clients.erase(it);
-		//	delete info;
-		//	continue;
-		//}
-	}
+	static ClientInfoManager obj;
 
+	return obj;
+	// TODO: insert return statement here
 }
+
 

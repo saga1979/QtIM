@@ -91,13 +91,16 @@
     <ClCompile Include="client_info_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_client_info_manager.cpp">
+    <ClCompile Include="process_message.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_socket_process.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_client_info_manager.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_socket_process.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="process_message.cpp">
+    <ClCompile Include="socket_process.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -121,6 +124,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="client_info_manager.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="socket_process.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

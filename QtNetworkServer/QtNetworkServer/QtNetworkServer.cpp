@@ -77,14 +77,12 @@ void QtNetworkServer::OnStartClick()
 
 QtNetworkServer::~QtNetworkServer()
 {
-	for (list<QAbstractSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
-	{
-		(*it)->close();
-	}
 
-	for (map<QAbstractSocket*, std::string*>::iterator it = m_clientBuffs.begin(); it != m_clientBuffs.end(); it++)
+	for (map<QAbstractSocket*, MySocketClient*>::iterator it = m_clients.begin();
+		it != m_clients.end(); it++)
 	{
-		delete  (*it).second;
+		it->first->close();
+		delete  it->second;
 	}	
 
 	if (m_registerServer != 0)
@@ -95,7 +93,7 @@ QtNetworkServer::~QtNetworkServer()
 
 void QtNetworkServer::OnNewConnection()
 {
-	QTcpSocket* client = m_comServer->nextPendingConnection();
+	QAbstractSocket* client = m_comServer->nextPendingConnection();
 
 	if (client == 0)
 	{
@@ -104,41 +102,42 @@ void QtNetworkServer::OnNewConnection()
 
 	QObject::connect(client, SIGNAL(readyRead()), this, SLOT(OnClientReadyRead()));
 	QObject::connect(client, SIGNAL(disconnected()), this, SLOT(OnClientDisconnected()));
-	QObject::connect(client, SIGNAL(disconnected()), client, SLOT(deleteLater()));
+	
 
 	ui.m_btSend->setEnabled(true);
 
-	m_clients.push_back(client);
+	MySocketClient* sc = new MySocketClient(client);	
 
-	m_clientBuffs.insert(std::pair<QTcpSocket*, std::string*>(client, new string));
+	m_clients.insert(pair<QAbstractSocket*, MySocketClient*>(client, sc));
 
 }
 
 void QtNetworkServer::OnSendClick()
 {
-	for (std::list<QAbstractSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
-	{
-		QAbstractSocket* socket = *it;
-		//清理断开的连接及其占用的资源
-		if (socket->state() == QAbstractSocket::UnconnectedState)
-		{
-			it = m_clients.erase(it);
-			string* val = m_clientBuffs[*it];
-			m_clientBuffs.erase(*it);
-			delete val;
-			delete socket;
-			continue;
-		}
-		
-		socket->write(QByteArray::fromStdString(ui.lineEdit->text().toStdString()));
-	}
+
+	//for (std::list<QAbstractSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
+	//{
+	//	QAbstractSocket* socket = *it;
+	//	//清理断开的连接及其占用的资源
+	//	if (socket->state() == QAbstractSocket::UnconnectedState)
+	//	{
+	//		it = m_clients.erase(it);
+	//		string* val = m_clientBuffs[*it];
+	//		m_clientBuffs.erase(*it);
+	//		delete val;
+	//		delete socket;
+	//		continue;
+	//	}
+	//	
+	//	socket->write(QByteArray::fromStdString(ui.lineEdit->text().toStdString()));
+	//}
 }
 
 void QtNetworkServer::OnClientReadyRead()
 {
-	for (std::list<QAbstractSocket*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
+	for (map<QAbstractSocket*, MySocketClient*>::iterator it = m_clients.begin(); it != m_clients.end(); it++)
 	{
-		QAbstractSocket* socket = *it;
+		QAbstractSocket* socket = it->first;
 
 		if (!socket->isReadable())
 		{
@@ -146,41 +145,17 @@ void QtNetworkServer::OnClientReadyRead()
 		}
 		
 		QByteArray bytes =  socket->readAll();
+		//给缓冲区加锁
 
-		string* buf = m_clientBuffs[socket];
+		m_clients[socket]->mutex->lock();
+		string* buf = m_clients[socket]->buff;
 
-		buf->append(bytes.toStdString());
+		m_clients[socket]->buff->append(bytes.toStdString());
 
-		while (1)
-		{
+		m_clients[socket]->mutex->unlock();
+		//给缓冲区解锁	
 
-			Package package;
-
-			int index = package.from_data(*buf);
-
-			if (index <= 0)
-			{
-				break;
-			}
-
-			buf->erase(0, index);//清理已经读取的数据
-
-
-			ProcessInterface* pi = CmdProcessFactory::instance().getProcess(package.getCmd()->type());
-
-			assert(pi);
-
-			bool success = pi->ProcessCommand(package.getCmd(), socket, &m_clientInfoManager);
-
-			delete pi;			
-
-			if (package.getCmd()->type() == CT_LOGIN && !success)
-			{
-				socket->close();
-			
-				break;
-			}
-		}
+		m_clients[socket]->con->notify_one();
 
 	}
 }
@@ -233,14 +208,17 @@ void QtNetworkServer::OnClientDisconnected()
 {
 	QAbstractSocket* socket = 0;
 
-	foreach(socket, m_clients)
+	pair<QAbstractSocket*, MySocketClient*> p;
+
+	foreach(p, m_clients)
 	{
+		socket = p.first;
 		if (socket->state() == QAbstractSocket::UnconnectedState)
-		{
-			delete m_clientBuffs[socket];
-			m_clients.remove(socket);
+		{			
+			m_clients.erase(socket);
 			//该连接还没有加入在线客户端管理模块
-			m_clientInfoManager.remove(socket);
+			ClientInfoManager::instance().remove(socket);
+			delete p.second;
 			break;
 		}
 	}
